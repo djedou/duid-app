@@ -7,12 +7,12 @@ use clap::{
 pub(crate) struct InitArgs {
     /// Your project name
     #[arg(short, long)]
-    name: String,
+    pub(crate) name: String,
 }
 #[derive(Parser, Debug)]
 pub(crate) struct RemoveArgs {
     #[arg(short, long)]
-    name: Vec<String>,
+    pub(crate) name: Vec<String>,
 }
 
 #[derive(Debug)]
@@ -72,5 +72,5 @@ impl Subcommand for ArgSub {
 #[derive(Parser, Debug)]
 pub(crate) struct Args {
     #[command(subcommand)]
-    subcommand: ArgSub,
+    pub(crate) subcommand: ArgSub,
 }
