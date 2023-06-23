@@ -3,8 +3,6 @@ name = "duid-app"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [[bin]]
 name = "cargo-duid-app"
 path = "./cargo-duid-app"
@@ -17,12 +15,12 @@ path = "./cargo-duid-app"
 members = [
     "cargo-duid-app",
     "duid-core",
+    "duid-data-grid",
     "duid-ui"
 ]
 
 exclude = [
-    #"examples/holy_grail_app",
     "duid-design",
     "duid-integration",
-    "duid-template"
+    "djed-test"
 ]

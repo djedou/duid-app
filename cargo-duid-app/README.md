@@ -5,14 +5,14 @@ duid app is a cargo subcommand
 ## localy installation  
 cargo install --path .
 
-## prod installation
+## installation from crate.io  
 cargo install duid-app
 
 
 ## How to run duid_app  
-target\debug> ./cargo-duid-app.exe --help  
-target\debug> ./cargo-duid-app.exe <COMMAND>  
-target\debug> ./cargo-duid-app.exe init --name <NAME>  
-  
-cargo install cargo-generate  
-cargo generate --git https://github.com/djedou/duid_template  
+cargo duid-app init --name <PROJECT_NAME>
+cargo duid-app dev  
+cargo duid-app serve --host <HOST> --port <PORT>
+cargo duid-app build  
+cargo duid-app deploy --host <HOST> --port <PORT>
+

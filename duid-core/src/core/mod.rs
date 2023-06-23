@@ -1,2 +1,4 @@
 //pub mod nodes;
-pub mod memory;
+pub(crate) mod memory;
+/// Duid router module
+pub mod router;
