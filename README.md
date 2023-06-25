@@ -3,4 +3,4 @@
 
 
 # Installation  
-checkout: [cargo-duid-app](https://github.com/djedou/duid-app)  
+checkout: [cargo-duid-app](https://github.com/djedou/cargo-duid-app)  
