@@ -45,7 +45,7 @@ cargo-duid-app deploy --host <HOST>  --port <PORT>
 
 # Working from crates.io  
 ## Install 
-NB: Not yet on crates.io, so please don't use those commands.  
+NB: Not yet on crates.io.  
 ```  
 cargo install cargo-duid-app  
 ```  
@@ -86,7 +86,7 @@ cargo duid-app deploy --host <HOST>  --port <PORT>
 ``` 
 
 # Structure:
-The folder **./src/app** should have a file called **page.rs** which represents **/** the **root path of your application**.  
+The folder **./src/app** should have a file called **page.rs** which represents **/** the **root path** of your application.  
 Each folder in the directory **./src/app** represents a **path**.      
 Each folder in the directory **./src/app** should have the file called **page.rs**.  
 Each **page.rs** should look like this format  
