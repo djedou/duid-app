@@ -1,1 +1,1 @@
-pub mod duid_core;
+pub use duid_core;
