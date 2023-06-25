@@ -20,7 +20,7 @@ cargo-duid-app dev
 ```  
 
 ## Run develop server 
-Open another terminal      
+From another terminal      
 ```  
 cargo-duid-app serve // default --host="0.0.0.0" --port=3000 
 ```
@@ -43,13 +43,9 @@ or
 cargo-duid-app deploy --host <HOST>  --port <PORT>  
 ``` 
 
-
-
-
-
-
-## Install from crate.io  
-NB: Not yet on crate.io, so please don't use this command.  
+# Working from crate.io  
+## Install 
+NB: Not yet on crate.io, so please don't use those commands.  
 ```  
 cargo install cargo-duid-app  
 ```  
@@ -66,9 +62,12 @@ cargo duid-app dev
 ```  
 
 ## Run develop server 
-Open another terminal      
+From another terminal      
 ```  
 cargo duid-app serve // default --host="0.0.0.0" --port=3000  
+```  
+or  
+```
 cargo duid-app serve --host <HOST>  --port <PORT>  
 ```  
 
@@ -80,10 +79,13 @@ cargo duid-app build
 ## Run production server  
 ```  
 cargo duid-app deploy // default --host="0.0.0.0" --port=3000  
+```  
+or  
+```
 cargo duid-app deploy --host <HOST>  --port <PORT>  
 ``` 
 
-## NB:
+# Structure:
 The folder **./src/app** should have a file called **page.rs** which represent **/** the **root path of your application**.  
 Each folder in the directory **./src/app** represent a **path**.      
 Each folder in the directory **./src/app** should have the file called **page.rs**.  
