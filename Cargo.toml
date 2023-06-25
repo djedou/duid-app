@@ -3,13 +3,9 @@ name = "duid-app"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "cargo-duid-app"
-path = "./cargo-duid-app"
-
 
 [dependencies]
-
+duid-core = {version = "0.1.0", path = "./duid-core"}
 
 [workspace]
 members = [
@@ -20,5 +16,5 @@ members = [
 
 exclude = [
     "duid-design",
-    "duid-integration/duid-core-test"
+    "duid-integrations/duid-core-test"
 ]

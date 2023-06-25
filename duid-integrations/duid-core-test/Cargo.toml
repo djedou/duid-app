@@ -1,0 +1,35 @@
+[package]
+name = "duid-core-test"
+version = "0.1.0"
+authors = ["djedou <djedouarnaud.aman@gmail.com>"]
+edition = "2021"
+
+
+[[bin]]
+name = "duid-dev"
+path = "src/tools/dev.rs"
+
+[[bin]]
+name = "duid-serve"
+path = "src/tools/serve.rs"
+
+[[bin]]
+name = "duid-build"
+path = "src/tools/build.rs"
+
+[[bin]]
+name = "duid-deploy"
+path = "src/tools/deploy.rs"
+
+[features]
+
+
+[dependencies]
+wasm-bindgen = "0.2"
+
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+[profile.release]
+opt-level = "s"

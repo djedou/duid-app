@@ -6,3 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde_json = "1.0.59"
+serde = { version = "1.0.125", features = ["derive"]}
+tokio = {version = "1.26", features = ["macros", "rt-multi-thread", "rt", "net"]}
+tracing = "0.1.26"
+tracing-subscriber = "0.3.1"
+hyper = {version = "0.14", features = ["server", "tcp", "http1", "http2"]}
+match_request = "0.1"
+futures = "0.3"
+multipart = "0.18"
+mime = "0.3"
