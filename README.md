@@ -43,7 +43,7 @@ or
 cargo-duid-app deploy --host <HOST>  --port <PORT>  
 ``` 
 
-# Working from crate.io  
+# Working from crates.io  
 ## Install 
 NB: Not yet on crate.io, so please don't use those commands.  
 ```  
