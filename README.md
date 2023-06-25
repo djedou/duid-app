@@ -1,12 +1,55 @@
 # duid-app
-**duid-app**: **D**jedou **UI** **D**esign **App**lication
-# NB:  
-before push into crate.io, merge it into duid project (workspace) and then publish duid  
+**duid-app**: **D**jedou **UI** **D**esign **App**lication  
 
-## localy installation  
+# Working by cloning the repository.  
+## Installation  
+```  
+cd cargo-duid-app  
 cargo install --path .
+```
+  
+## Create project  
+```  
+cargo-duid-app init --name <PROJECT_NAME>  
+```  
+  
+## Develop your project  
+```  
+cd <PROJECT_NAME>  
+cargo-duid-app dev  
+```  
+
+## Run develop server 
+Open another terminal      
+```  
+cargo-duid-app serve // default --host="0.0.0.0" --port=3000 
+```
+or  
+```  
+cargo-duid-app serve --host <HOST>  --port <PORT>  
+```  
+
+## Build your project    
+```  
+cargo-duid-app build  
+``` 
+
+## Run production server  
+```  
+cargo-duid-app deploy // default --host="0.0.0.0" --port=3000  
+```  
+or  
+```
+cargo-duid-app deploy --host <HOST>  --port <PORT>  
+``` 
+
+
+
+
+
 
 ## Install from crate.io  
+NB: Not yet on crate.io, so please don't use this command.  
 ```  
 cargo install cargo-duid-app  
 ```  
