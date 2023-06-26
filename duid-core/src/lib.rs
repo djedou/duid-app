@@ -5,3 +5,9 @@ pub mod core;
 pub mod server;
 /// Duid compiler module.
 pub mod compiler;
+
+/*
+pub mod console {
+    pub use tracing::{info, error, trace, debug, warn};
+}
+*/

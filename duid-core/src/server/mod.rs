@@ -1,3 +1,5 @@
+pub(crate) mod router;
+
 use hyper::{
     Body, Request, Response, server::Server,
     service::{make_service_fn, service_fn}
@@ -5,22 +7,13 @@ use hyper::{
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::str::FromStr;
+use crate::server::router::router;
 
-async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    /*match router(sys, req).await {
+async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    match router(req).await {
         Ok(res) => Ok(res),
         Err(_) => Ok(Response::new(Body::from("Hello World")))
-    }*/
-
-    Ok(Response::new(Body::from(r#"<div id="app"></div>
-                                    <script type="module">
-                                        import init, { duid } from './pkg/button_app.js';
-                                        (async () => {
-                                            console.log("Bravo Djedou!")
-                                            await init();
-                                            await duid('app');
-                                        })();
-                                    </script>"#)))
+    }
 }
 
 

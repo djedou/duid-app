@@ -15,6 +15,7 @@ members = [
 ]
 
 exclude = [
+    "duid-engine",
     "duid-design",
     "duid-integrations/duid-core-test"
 ]
