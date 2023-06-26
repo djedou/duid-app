@@ -12,7 +12,15 @@ async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
         Err(_) => Ok(Response::new(Body::from("Hello World")))
     }*/
 
-    Ok(Response::new(Body::from("<div>Hello world by djedou</div>")))
+    Ok(Response::new(Body::from(r#"<div id="app"></div>
+                                    <script type="module">
+                                        import init, { duid } from './pkg/button_app.js';
+                                        (async () => {
+                                            console.log("Bravo Djedou!")
+                                            await init();
+                                            await duid('app');
+                                        })();
+                                    </script>"#)))
 }
 
 
