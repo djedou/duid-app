@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+js-sys = { version = "0.3", optional = true }
 serde_json = "1.0.59"
 serde = { version = "1.0.125", features = ["derive"]}
 hyper = {version = "0.14", features = ["server", "tcp", "http1", "http2"]}
@@ -13,3 +14,72 @@ match_request = "0.1"
 futures = "0.3"
 multipart = "0.18"
 mime = "0.3"
+
+
+
+[dependencies.web-sys]
+version = "0.3"
+optional = true
+features = [
+    #"AnimationEvent",
+    #"Comment",
+    #"ClipboardEvent",
+    "console",
+    #"CustomElementRegistry",
+    #"Document",
+    #"DocumentFragment",
+    #"Element",
+    #"Event",
+    #"HtmlElement",
+    #"EventTarget",
+    #"KeyboardEvent",
+    #"HashChangeEvent",
+    #"InputEvent",
+    #"Headers",
+    #"HtmlButtonElement",
+    #"HtmlCollection",
+    #"HtmlDetailsElement",
+    #"HtmlHeadElement",
+    #"HtmlInputElement",
+    #"HtmlMenuItemElement",
+    #"HtmlTextAreaElement",
+    #"HtmlFieldSetElement",
+    #"HtmlLinkElement",
+    #"HtmlLiElement",
+    #"HtmlMeterElement",
+    #"HtmlMenuItemElement",
+    #"HtmlProgressElement",
+    #"HtmlParamElement",
+    #"HtmlOutputElement",
+    #"HtmlDataElement",
+    #"HtmlOptGroupElement",
+    #"HtmlOptionElement",
+    #"HtmlSelectElement",
+    #"HtmlStyleElement",
+    #"HtmlTextAreaElement",
+    #"Storage",
+    #"ShadowRoot",
+    #"ShadowRootInit",
+    #"ShadowRootMode",
+    #"MouseEvent",
+    #"Node",
+    #"NodeList",
+    #"Text",
+    #"TransitionEvent",
+    #"CharacterData",
+    #"Performance",
+    #"Window",
+    #"History",
+    #"Response",
+    #"RequestInit",
+	#"Location",
+	#"ScrollToOptions",
+    #"Navigator",
+    #"ReadableStream",
+    #"CanvasRenderingContext2d",
+    #"HtmlCanvasElement"
+]
+
+[dependencies.wasm-bindgen]
+version = "0.2"
+optional = true

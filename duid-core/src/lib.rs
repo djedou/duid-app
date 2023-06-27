@@ -6,8 +6,9 @@ pub mod server;
 /// Duid compiler module.
 pub mod compiler;
 
-/*
-pub mod console {
-    pub use tracing::{info, error, trace, debug, warn};
+pub mod web_sys {
+    pub use web_sys::{
+        /*EventTarget, HtmlElement, HtmlStyleElement, Node, CanvasRenderingContext2d, HtmlCanvasElement, 
+        Document, Window, History, Location, */console
+    };
 }
-*/
