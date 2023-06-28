@@ -14,9 +14,8 @@ serde = { version = "1.0.125", features = ["derive"]}
 #futures = "0.3"
 #multipart = "0.18"
 mime = "0.3"
-#console_log = "1.0"
-#tracing = { version = "0.1", features = ["log"] }
-#tracing-subscriber = "0.3"
+console_log = "1.0"
+tracing = { version = "0.1", features = ["log"] }
 
 [features]
 #default = ["wasm-bindgen", "js-sys", "web-sys", "with-request-animation-frame"]

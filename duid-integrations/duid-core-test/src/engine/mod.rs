@@ -1,7 +1,6 @@
 use duid_app::duid_core::{
     console::info,
-    core::router::Router,
-    init_trace
+    core::router::Router
 };
 use std::rc::Rc;
 
@@ -12,8 +11,6 @@ pub struct DuidEngine {
 impl DuidEngine {
 
     pub fn start() -> DuidEngine {
-        init_trace();
-
         info!("Bravo Djedou, it works from wasm!!!!!");
 
         let duid_engine = DuidEngine {

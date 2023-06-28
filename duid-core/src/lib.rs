@@ -11,9 +11,6 @@ pub mod compiler;
     };
 }*/
 
-/*
-use tracing::subscriber::set_global_default;
-use tracing_subscriber::FmtSubscriber;
 
 pub mod console {
     pub use tracing::{info, error, trace, debug, warn};
@@ -24,8 +21,4 @@ pub fn init_trace() {
     std::panic::set_hook(Box::new(|info| {
         tracing::error!("{:?}", info);
     }));
-
-    let subscriber = FmtSubscriber::new();
-    set_global_default(subscriber).unwrap();
 }
-*/
