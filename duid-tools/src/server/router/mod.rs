@@ -2,7 +2,7 @@
 pub(crate) mod unknowned;
 pub(crate) mod response;
 pub(crate) mod init_route;
-pub(crate) mod duid_engine_route;
+pub(crate) mod engine_routes;
 
 use match_request::{match_request, Error, Params};
 use hyper::{Request, Response, Body};
@@ -11,8 +11,9 @@ use multipart::server::FieldHeaders;
 use self::{
     unknowned::unknowed_route,
     init_route::init_route,
-    duid_engine_route::duid_engine_route
+    engine_routes::{duid_engine_js, duid_engine_wasm}
 };
+
 
 // A boxed type definition for your async views.
 pub type RouterHandler = Box<dyn Fn(Request<Body>, Params) -> BoxFuture<'static, Response<Body>> + Send + Sync>;
@@ -42,19 +43,23 @@ macro_rules! route_handler {
 pub async fn router(req: Request<Body>) -> Result<Response<Body>, Error> {
     let method = req.method();
     let path = req.uri().path();
-    
+
     let (handler, params) = match_request!(method, path, {
         "/" => {
             GET => crate::route_handler!(init_route), 
             POST => crate::route_handler!(unknowed_route), 
         },
-        "/duid_engine.wasm" => {
-            GET => crate::route_handler!(duid_engine_route), 
+        "/duid_engine" => {
+            GET => crate::route_handler!(duid_engine_js), 
             POST => crate::route_handler!(unknowed_route), 
         },
         "/favicon.ico" => {
             POST => crate::route_handler!(unknowed_route), 
             GET => crate::route_handler!(unknowed_route), 
+        },
+        "/duid_engine_bg.wasm" => {
+            GET => crate::route_handler!(duid_engine_wasm),
+            POST => crate::route_handler!(unknowed_route),
         },
         "/*" => {
             POST => crate::route_handler!(unknowed_route),

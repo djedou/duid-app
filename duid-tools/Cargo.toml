@@ -1,0 +1,36 @@
+[package]
+name = "duid-tools"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "duid_tools"
+path = "src/lib.rs"
+
+[[bin]]
+name = "duid-serve"
+path = "src/serve.rs"
+
+[[bin]]
+name = "duid-build"
+path = "src/build.rs"
+
+[[bin]]
+name = "duid-deploy"
+path = "src/deploy.rs"
+
+
+[dependencies]
+#duid-app = {version = "0.1.0", path="../../duid-app" }
+tokio = {version = "1.26", features = ["macros", "rt-multi-thread", "rt", "net"]}
+clap = {version = "4.0", features = ["derive", "cargo"]  }
+tracing = { version = "0.1", features = ["log"] }
+tracing-subscriber = "0.3"
+serde_json = "1.0.59"
+serde = { version = "1.0.125", features = ["derive"]}
+hyper = {version = "0.14", features = ["server", "tcp", "http1", "http2"]}
+match_request = "0.1"
+futures = "0.3"
+multipart = "0.18"

@@ -16,8 +16,6 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
 }
 
-
-
 pub async fn server(address: &str) {
     // Construct our SocketAddr to listen on...
     let addr = SocketAddr::from_str(address).expect("No able to parse address!");

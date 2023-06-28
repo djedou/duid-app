@@ -2,7 +2,7 @@ mod history;
 
 pub(crate) use history::*;
 use std::rc::Rc;
-use crate::core::memory::ROUTERHISTORY;
+use crate::memory::ROUTERHISTORY;
 
 
 

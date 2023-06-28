@@ -4,15 +4,5 @@
 
 
 [tasks.dev]
-linux_alias = "linux_dev"
-windows_alias = "windows_dev"
-mac_alias = "mac_dev"
-
-[tasks.linux_dev]
-script = "echo hello"
-
-[tasks.windows_dev]
-command = "./target/release/duid-dev.exe"
-
-[tasks.mac_dev]
-script = "echo hello"
+command = "wasm-pack"
+args = ["build", "--target", "web", "--release"]

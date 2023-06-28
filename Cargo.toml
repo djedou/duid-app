@@ -2,7 +2,7 @@
 name = "duid-app"
 version = "0.1.0"
 edition = "2021"
-
+resolver = "2"
 
 [dependencies]
 duid-core = {version = "0.1.0", path = "./duid-core"}
@@ -16,6 +16,7 @@ members = [
 
 exclude = [
     "duid-engine",
+    "duid-tools",
     "duid-design",
     "duid-integrations/duid-core-test"
 ]

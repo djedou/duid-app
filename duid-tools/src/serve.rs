@@ -1,8 +1,6 @@
-use tracing::{info, subscriber::set_global_default};
-use tracing_subscriber::FmtSubscriber;
-use duid_app::duid_core::server::server;
+use duid_tools::{server::server, init_trace};
 use clap::Parser;
-
+use tracing::info;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -14,13 +12,10 @@ struct Args {
 
 #[tokio::main]
 async fn main() {
-    let subscriber = FmtSubscriber::new();
-    set_global_default(subscriber).unwrap();
+    init_trace();
 
     let args = Args::parse();
-    
     let address = format!("{}:{}", args.host, args.port);
-
     info!("Server: http://{}", address);
     server(&address).await
 }
