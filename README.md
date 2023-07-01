@@ -4,7 +4,9 @@
 
 # Why Duid is built in Rust and Wasm  
 **Safe**: We are using **wasm** here, no **javascript**.  
+  
 **Fast**: We wanted to benefit from the speeds of Rust and Wasm.  
+  
 **No surprise**: Type System, Compiler and Borrow checker of **Rust** programming language make us confident that  
 we will get what we are waiting for and there will be not any surprise.  
   
