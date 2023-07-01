@@ -7,6 +7,7 @@
 **Fast**: We wanted to benefit from the speeds of Rust and Wasm.  
 **No surprise**: Type System, Compiler and Borrow checker of **Rust** programming language make us confident that  
 we will get what we are waiting for and there will be not any surprise.  
+  
 **Backward-compatibility**: If a **Rust Crate** compiled at some point, then Rust's stability guarantees say that it'll still compile afterwards.  
 
 
