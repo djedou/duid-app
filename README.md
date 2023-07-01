@@ -12,13 +12,15 @@ we will get what we are waiting for and there will be not any surprise.
   
 **Backward-compatibility**: If a **Rust Crate** compiled at some point, then Rust's stability guarantees say that it'll still compile afterwards.  
 
+# Make sure to have Rust installed  
+[Install Rust](https://www.rust-lang.org/tools/install)  
 
 # Installation  
 checkout: [cargo-duid-app](https://github.com/djedou/cargo-duid-app)  
 
 
 ## Crates  
-[duid-app](https://github.com/djedou/cargo-duid-app)  
+[cargo-duid-app](https://github.com/djedou/cargo-duid-app)  
 [duid-core](https://github.com/djedou/duid/tree/master/duid-core)  
 [duid-ui](https://github.com/djedou/duid-ui)  
 [duid-template](https://github.com/djedou/duid_template)  
