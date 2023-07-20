@@ -3,14 +3,10 @@
 pub mod core;
 /// Duid compiler module.
 pub mod compiler;
-
-/*pub mod web_sys {
-    pub use web_sys::{
-        EventTarget, HtmlElement, HtmlStyleElement, Node, CanvasRenderingContext2d, HtmlCanvasElement, 
-        Document, Window, History, Location, 
-    };
-}*/
-
+pub(crate) mod arena;
+pub(crate) mod dom;
+pub(crate) mod effects;
+pub(crate) mod tailwindcss_system;
 
 pub mod console {
     pub use tracing::{info, error, trace, debug, warn};
