@@ -1,3 +1,5 @@
+/// User App
+pub mod user_app;
 //pub mod nodes;
 pub mod memory;
 /// Duid router module

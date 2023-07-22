@@ -1,12 +1,12 @@
-
+/*
 /// Duid core module.
-pub mod core;
+//pub mod core;
 /// Duid compiler module.
 pub mod compiler;
 pub(crate) mod arena;
 pub(crate) mod dom;
 pub(crate) mod effects;
-pub(crate) mod tailwindcss_system;
+pub(crate) mod tailwindcss_system;*/
 
 pub mod console {
     pub use tracing::{info, error, trace, debug, warn};

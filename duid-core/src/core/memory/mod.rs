@@ -1,8 +1,10 @@
 
 use std::{cell::RefCell, rc::Rc};
-use crate::core::router::RouterHistory;
+use crate::core::{
+    router::RouterHistory
+};
 use std::cell::Cell;
-use std::collections::HashMap;
+use std::collections::{HashMap};
 use wasm_bindgen::closure::Closure;
 
 
