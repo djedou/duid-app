@@ -1,4 +1,5 @@
-use crate::{Compile, Node, Operator, Result};
+use crate::{Compile, Module, Result};
+//use crate::ast::Statement;
 
 // ANCHOR: interpreter
 pub struct Interpreter;
@@ -6,10 +7,10 @@ pub struct Interpreter;
 impl Compile for Interpreter {
     type Output = Result<i32>;
 
-    fn from_ast(ast: Vec<Node>) -> Self::Output {
+    fn from_ast(ast: Module) -> Self::Output {
         let mut ret = 0i32;
         let evaluator = Eval::new();
-        for node in ast {
+        for node in ast.statements {
             ret += evaluator.eval(&node);
         }
         Ok(ret)
@@ -25,8 +26,8 @@ impl Eval {
         Self
     }
     // ANCHOR: interpreter_eval
-    pub fn eval(&self, node: &Node) -> i32 {
-        match node {
+    pub fn eval(&self, node: &str) -> i32 {
+        /*match node {
             Node::Int(n) => *n,
             Node::UnaryExpr { op, child } => {
                 let child = self.eval(child);
@@ -44,7 +45,8 @@ impl Eval {
                     Operator::Minus => lhs_ret - rhs_ret,
                 }
             }
-        }
+        }*/
+        50
     }
     // ANCHOR_END: interpreter_eval
 }

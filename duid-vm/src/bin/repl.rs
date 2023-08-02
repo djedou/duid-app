@@ -11,8 +11,8 @@ cfg_if! {
         use duid_vm::Interpreter as Engine;
     }
     else if #[cfg(feature = "vm")]{
-        use duid_vm::vm::bytecode::Interpreter as Engine;
-        use duid_vm::VM;
+        use duid_vm::compiler::vm::bytecode::Interpreter as Engine;
+        use duid_vm::compiler::vm::vm::DuidVm;
     }
 }
 
@@ -25,7 +25,7 @@ fn main() -> Result<()> {
         match readline {
             Ok(line) => {
                 cfg_if! {
-                    if #[cfg(any(feature = "interpreter"))] {
+                    if #[cfg(feature = "interpreter")] {
                         match Engine::from_source(&line) {
                             Ok(result) => println!("{}", result),
                             Err(e) => eprintln!("{}", e),
@@ -33,10 +33,10 @@ fn main() -> Result<()> {
                     }
                     else if #[cfg(feature = "vm")] {
                         let byte_code = Engine::from_source(&line);
-                        //println!("byte code: {:?}", byte_code);
-                        let mut vm = VM::new(byte_code);
+                        println!("byte code: {:?}", byte_code);
+                        let mut vm = DuidVm::new(byte_code);
                         vm.run();
-                        println!("{}", vm.pop_last());
+                        //println!("{}", vm.pop_last());
                     }
                 }
             }

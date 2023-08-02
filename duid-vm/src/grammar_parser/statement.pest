@@ -1,0 +1,20 @@
+
+LetVariable = @{ Identifier ~ WHITESPACE? }
+LetType = { (Colon ~ WHITESPACE? ~ Type ~ WHITESPACE?) }
+LetBlock = { Eq ~ WHITESPACE? ~ Expression }
+LetStatement = {  KW_LET ~ WHITESPACE? ~ LetVariable ~ LetType? ~ LetBlock? ~ WHITESPACE? ~ Semi? }
+ExpressionStatement = { (ExpressionWithoutBlock ~ WHITESPACE? ~ Semi) | (ExpressionWithBlock ~ WHITESPACE? ~ Semi?) }
+
+Statement = _{
+    Semi
+    | Item // need to be save somewhere in memory for later use
+    | LetStatement // need to be save somewhere in memory for later use
+    | ExpressionStatement // they become instructions
+}
+
+Statements = {
+    Statement+
+    | Statement+ ~ WHITESPACE? ~ ExpressionWithoutBlock
+    | ExpressionWithoutBlock
+    | Comment
+}

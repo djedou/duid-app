@@ -1,0 +1,209 @@
+
+BorrowExpression = {
+    (And|AndAnd) ~ Literals
+    | (And|AndAnd) ~ KW_MUT ~ WHITESPACE ~ Literals
+}
+DereferenceExpression = { Star ~ Literals }
+ErrorPropagationExpression = { Literals ~ WHITESPACE? ~ Question }
+
+NegationExpression = { (Minus ~ WHITESPACE? ~ Literals) | (Not ~ WHITESPACE? ~ Literals) }
+
+ArithmeticOrLogicalExpression  = {
+    Literals ~ WHITESPACE? ~ Plus ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Minus ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Star ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Slash ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Percent ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ And ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Or ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Caret ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Shl ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Shr ~ WHITESPACE? ~ Literals
+}
+ComparisonExpression = {
+    Literals ~ WHITESPACE? ~ EqEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Ne ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Gt ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Lt ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Ge ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ Le ~ WHITESPACE? ~ Literals
+}
+LazyBooleanExpression = {
+    Literals ~ WHITESPACE? ~ OrOr ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ AndAnd ~ WHITESPACE? ~ Literals
+}
+TypeCastExpression = { Literals ~ WHITESPACE? ~ KW_AS ~ WHITESPACE? ~ Type }
+AssignmentExpression = { Literals ~ WHITESPACE? ~ Eq ~ WHITESPACE? ~ Literals }
+CompoundAssignmentExpression = {
+    Literals ~ WHITESPACE? ~ PlusEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ MinusEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ StarEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ SlashEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ PercentEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ AndEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ OrEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ CaretEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ ShlEq ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ ShrEq ~ WHITESPACE? ~ Literals
+}
+
+OperatorExpression = {
+    BorrowExpression
+    | DereferenceExpression
+    | ErrorPropagationExpression
+    | NegationExpression
+    | ArithmeticOrLogicalExpression
+    | ComparisonExpression
+    | LazyBooleanExpression
+    | TypeCastExpression
+    | AssignmentExpression
+    | CompoundAssignmentExpression
+}
+
+GroupedExpression = { ParenthesesOpen ~ WHITESPACE? ~ Literals ~ WHITESPACE? ~ ParenthesesClose }
+ArrayExpression = { SquareBracketsOpen ~ WHITESPACE? ~ ArrayElements? ~ WHITESPACE? ~ SquareBracketsClose }
+ArrayElements = {
+    Literals ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ Literals ~ WHITESPACE?)* ~ Comma?
+    | (Literals ~ WHITESPACE? ~ Semi ~ WHITESPACE? ~ Literals)
+}
+AwaitExpression = { Literals ~ Dot ~ KW_AWAIT }
+IndexExpression = { Literals ~ SquareBracketsOpen ~ Literals ~ SquareBracketsClose }
+
+TupleExpression = { ParenthesesOpen ~ WHITESPACE? ~ TupleElements? ~ WHITESPACE? ~ ParenthesesClose }
+TupleElements = { (Literals ~ WHITESPACE? ~ Comma)+ ~ WHITESPACE? ~ Literals? }
+TupleIndexingExpression  = { Literals ~ Comma ~ DecInt }
+
+/*
+StructExprStruct = { Type ~ WHITESPACE? ~ CurlyBracesOpen ~ WHITESPACE? ~ (StructExprFields | StructBase)? ~ WHITESPACE? ~ CurlyBracesClose }
+StructExprFields = { StructExprField ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ StructExprField)* ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ StructBase | Comma?) }
+StructExprField  = { 
+    Identifier
+    | (Identifier | DecInt) ~ WHITESPACE? ~ Colon ~ WHITESPACE? ~ Expression
+}
+StructBase = { DotDot ~ Expression }
+StructExprTuple  = {
+    Type ~ ParenthesesOpen ~ (Expression ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ Expression)* ~ WHITESPACE? ~ Comma?)? ~ ParenthesesClose
+}
+StructExprUnit = { Type }
+StructExpression = {
+    StructExprStruct
+    | StructExprTuple
+    | StructExprUnit
+}
+*/
+CallExpression = {
+    Literals ~ WHITESPACE? ~ ParenthesesOpen ~ WHITESPACE? ~ CallParams? ~ WHITESPACE? ~ ParenthesesClose
+}
+CallParams = { Literals ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ Literals)* ~ WHITESPACE? ~ Comma? }
+MethodCallExpression = {
+    Literals ~ Comma ~ Identifier ~ ParenthesesOpen ~ WHITESPACE? ~ CallParams? ~ WHITESPACE? ~ ParenthesesClose
+}
+FieldExpression = { Literals ~ Dot ~ Identifier }
+ClosureExpression = {
+    (Or ~ Or | Or ~ WHITESPACE? ~ ClosureParameters? ~ WHITESPACE? ~ Or) ~ WHITESPACE? ~ (Literals | RArrow ~ WHITESPACE? ~ Type ~ WHITESPACE? ~ BlockExpression)
+}
+ClosureParameters = {
+    ClosureParam ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ ClosureParam)* ~ WHITESPACE? ~ Comma?
+}
+ClosureParam = { Identifier ~ WHITESPACE? ~ (Colon ~ WHITESPACE? ~ Type)? }
+AsyncBlockExpression = { KW_ASYNC ~ WHITESPACE? ~ BlockExpression }
+ContinueExpression = { KW_CONTINUE ~ WHITESPACE ~ Identifier? }
+BreakExpression = { KW_BREAK ~ WHITESPACE ~ Identifier? ~ WHITESPACE ~ Literals? }
+
+RangeExpression = {
+    RangeExpr
+    | RangeFromExpr
+    | RangeToExpr
+    | RangeFullExpr
+    | RangeInclusiveExpr
+    | RangeToInclusiveExpr
+}
+RangeExpr = { Literals ~ DotDot ~ Literals }
+RangeFromExpr = { Literals ~ DotDot }
+RangeToExpr = { DotDot ~ Literals }
+RangeFullExpr = { DotDot }
+RangeInclusiveExpr = { Literals ~ DotDotEq ~ Literals }
+RangeToInclusiveExpr = { DotDotEq ~ Literals }
+ReturnExpression = { KW_RETURN ~ WHITESPACE? ~ Literals? ~ Semi? }
+UnderscoreExpression = { Underscore }
+
+
+ExpressionWithoutBlock = {
+    //Literals
+    //| SimplePath
+    | GroupedExpression
+    | ArrayExpression
+    | TupleExpression
+    //| StructExpression
+    | ClosureExpression
+    | AsyncBlockExpression
+    | ContinueExpression
+    | BreakExpression
+    | ReturnExpression
+    | UnderscoreExpression
+    | OperatorExpression
+    | IndexExpression
+    | AwaitExpression
+    | TupleIndexingExpression
+    | CallExpression
+    | MethodCallExpression
+    | FieldExpression
+    | RangeExpression
+}
+
+LoopLabel = { Identifier ~ WHITESPACE? ~ Colon }
+InfiniteLoopExpression = { KW_LOOP ~ WHITESPACE ~ BlockExpression }
+PredicateLoopExpression = { KW_WHILE ~ WHITESPACE ~ Expression ~ WHITESPACE ~ BlockExpression }
+IteratorLoopExpression = { KW_FOR ~ WHITESPACE ~ Identifier ~ WHITESPACE ~ KW_IN ~ WHITESPACE ~ Expression ~ WHITESPACE? ~ BlockExpression }
+LabelBlockExpression = { BlockExpression }
+PredicatePatternLoopExpression = {
+    KW_WHILE ~ WHITESPACE ~ KW_LET ~ WHITESPACE ~ Literals ~ WHITESPACE ~ Eq ~ WHITESPACE ~ Scrutinee ~ WHITESPACE ~ BlockExpression
+}
+
+LoopExpression = {
+    LoopLabel? ~ WHITESPACE? ~ (
+        InfiniteLoopExpression
+        | PredicateLoopExpression
+        | PredicatePatternLoopExpression
+        | IteratorLoopExpression
+        | LabelBlockExpression
+    )
+}
+IfExpression = {
+    KW_IF ~ WHITESPACE ~ Expression ~ WHITESPACE ~ BlockExpression ~ WHITESPACE? ~ ((KW_ELSE ~ WHITESPACE)? ~ (BlockExpression | IfExpression | IfLetExpression))?
+}
+IfLetExpression = {
+    KW_IF ~ WHITESPACE ~ KW_LET ~ WHITESPACE ~ Identifier ~ WHITESPACE ~ Eq ~ WHITESPACE ~ Scrutinee ~ WHITESPACE ~ BlockExpression ~ WHITESPACE ~
+    ((KW_ELSE ~ WHITESPACE)? ~ (BlockExpression | IfExpression | IfLetExpression))?
+}
+
+MatchExpression = {
+    KW_MATCH ~ WHITESPACE ~ Scrutinee ~ WHITESPACE? ~ CurlyBracesOpen ~ WHITESPACE? ~ MatchArms? ~ WHITESPACE? ~ CurlyBracesClose
+}
+Scrutinee = { Expression }
+MatchArms = {
+    (MatchArm ~ WHITESPACE? ~ FatArrow ~ WHITESPACE? ~ (ExpressionWithoutBlock ~ WHITESPACE? ~ Comma | ExpressionWithBlock ~ WHITESPACE? ~ Comma?))* 
+    ~ WHITESPACE? ~ MatchArm ~ WHITESPACE? ~ FatArrow ~ WHITESPACE? ~ Expression ~ WHITESPACE? ~ Comma?
+}
+MatchArm = { Literals ~ WHITESPACE? ~ MatchArmGuard? }
+MatchArmGuard = { KW_IF ~ WHITESPACE ~ Expression }
+
+ExpressionWithBlock = {
+    BlockExpression
+    | LoopExpression
+    | IfExpression
+    | IfLetExpression
+    | MatchExpression
+}
+
+BlockExpression = { CurlyBracesOpen ~ WHITESPACE? ~ Statements+ ~ WHITESPACE? ~ CurlyBracesClose }
+
+Expression = {
+    ExpressionWithoutBlock ~ Semi?
+    | ExpressionWithBlock ~ Semi?
+}
+
+
+
+
+

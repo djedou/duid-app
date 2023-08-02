@@ -1,27 +1,36 @@
 use crate::compiler::vm::opcode::*;
 use crate::compiler::vm::Bytecode;
-use crate::Node;
+//use crate::Node;
+use super::instruction::Instruction;
 
 // ANCHOR: vm
 const STACK_SIZE: usize = 512;
 
-pub struct VM {
-    bytecode: Bytecode,
-    stack: [Node; STACK_SIZE],
-    stack_ptr: usize, // points to the next free space
+pub struct DuidVm {
+    //bytecode: Bytecode,
+    ip: Instruction,
+    stack: [u8; STACK_SIZE],
+    //stack_ptr: usize, // points to the next free space
 }
-// ANCHOR_END: vm
+// ANCHOR_END: DuidVm
 
-impl VM {
+impl DuidVm {
     pub fn new(bytecode: Bytecode) -> Self {
+        let mut stack = [0u8; STACK_SIZE];
+        let byte_size = bytecode.code.len();
+        if STACK_SIZE >= byte_size {
+            stack[0..byte_size].iter_mut().zip(bytecode.code.iter()).for_each(|(a, b)| {*a = *b;});
+        };
+
+
         Self {
-            bytecode,
-            stack: unsafe { std::mem::zeroed() }, // exercise: This is UB as Node has non-zero discriminant!
-            stack_ptr: 0,
+            ip: Instruction::new(),
+            stack,
         }
     }
     // ANCHOR: vm_interpreter
     pub fn run(&mut self) {
+        /*
         let mut ip = 0; // instruction pointer
         while ip < self.bytecode.instructions.len() {
             let inst_addr = ip;
@@ -71,10 +80,10 @@ impl VM {
                 }
                 _ => panic!("Unknown instruction"),
             }
-        }
+        }*/
     }
 
-    pub fn push(&mut self, node: Node) {
+    /*pub fn push(&mut self, node: Node) {
         self.stack[self.stack_ptr] = node;
         self.stack_ptr += 1; // ignoring the potential stack overflow
     }
@@ -91,9 +100,29 @@ impl VM {
         // the stack pointer points to the next "free" space,
         // which also holds the most recently popped element
         &self.stack[self.stack_ptr]
-    }
-}
+    }*/
 
+    pub fn push(&mut self, instr: Instruction) {
+        /*let end = self.ip.start + value.len();
+        self.stack[self.ip.start..end].iter_mut().zip(instr.data.iter()).for_each(|(a, b)| {*a = *b;});
+        self.ip.next = end;
+        self.ip.end = end - 1;*/
+    }
+
+    /*pub fn pop(&mut self, size: usize) -> Option<&[u8]> {
+        match self.stack_top >= size {
+            true => {
+                let start = self.stack_top - size;
+                let end = self.stack_top - 1;
+                let data = &self.stack[start..=end];
+                self.stack_top = start;
+                Some(data)
+            },
+            false => None
+        }
+    }*/
+}
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -103,9 +132,9 @@ mod tests {
     fn assert_pop_last(source: &str, node: Node) {
         let byte_code = Interpreter::from_source(source);
         println!("byte code: {:?}", byte_code);
-        let mut vm = VM::new(byte_code);
+        let mut vm = DuidVm::new(byte_code);
         vm.run();
-        assert_eq!(&node, vm.pop_last());
+        //assert_eq!(&node, vm.pop_last());
     }
 
     #[test]
@@ -120,3 +149,4 @@ mod tests {
         assert_pop_last("1 - 2;", Node::Int(-1));
     }
 }
+*/

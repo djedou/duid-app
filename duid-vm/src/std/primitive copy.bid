@@ -1,0 +1,15 @@
+mod std::primitives_types;
+pub mod std::primitives_types::{ p::data, p::data };
+pub use std::primitives_types::*;
+pub use std::primitives_types as Primitive;
+pub use std::primitives_types::{};
+use std::primitives_types::{p::data,p::data};
+
+25 + 89;
+/*
+pub struct Int8;
+
+impl Int8 {
+
+}
+*/

@@ -1,25 +1,28 @@
 use crate::compiler::vm::{make_op, OpCode};
-use crate::{Compile, Node, Operator};
+use crate::{Compile, Module/*, Operator*/};
+use std::collections::BTreeMap;
+use crate::vm::data::Data;
+
+pub type ModuleKey = String;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 // ANCHOR: bytecode
 pub struct Bytecode {
-    pub instructions: Vec<u8>,
-    pub constants: Vec<Node>,
+    pub code: Vec<u8>,
+    pub modules: BTreeMap<ModuleKey, Data>,
 }
 // ANCHOR_END: bytecode
 
 impl Bytecode {
     fn new() -> Self {
         Self {
-            instructions: Vec::new(),
-            constants: Vec::new(),
+            code: Vec::new(),
+            modules: BTreeMap::new(),
         }
     }
 }
 
 #[derive(Debug)]
-// ANCHOR: bytecode_interpreter
 pub struct Interpreter {
     bytecode: Bytecode,
 }
@@ -27,24 +30,24 @@ pub struct Interpreter {
 impl Compile for Interpreter {
     type Output = Bytecode;
 
-    fn from_ast(ast: Vec<Node>) -> Self::Output {
+    fn from_ast(ast: Module) -> Self::Output {
         let mut interpreter = Interpreter {
             bytecode: Bytecode::new(),
         };
-        for node in ast {
-            println!("compiling node {:?}", node);
-            interpreter.interpret_node(node);
+        /*for node in ast.statements {
+            println!("compiling node Djedou {:?}", node);
+            //interpreter.interpret_node(node);
             // pop one element from the stack after
             // each expression statement to clean up
-            interpreter.add_instruction(OpCode::OpPop);
-        }
+            //interpreter.add_instruction(OpCode::OpPop);
+        }*/
         interpreter.bytecode
     }
 }
 // ANCHOR_END: bytecode_interpreter
 
 impl Interpreter {
-    fn add_constant(&mut self, node: Node) -> u16 {
+    /*fn add_constant(&mut self, node: Node) -> u16 {
         self.bytecode.constants.push(node);
         (self.bytecode.constants.len() - 1) as u16 // cast to u16 because that is the size of our constant pool index
     }
@@ -82,12 +85,12 @@ impl Interpreter {
                 };
             }
         };
-    }
+    }*/
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    /*use super::*;
 
     #[test]
     fn basics() {
@@ -116,5 +119,5 @@ mod tests {
             },
             bytecode
         );
-    }
+    }*/
 }

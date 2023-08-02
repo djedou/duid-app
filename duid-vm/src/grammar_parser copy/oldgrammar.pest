@@ -1,0 +1,346 @@
+Module = _{ SOI ~ Statement* ~ EOI }
+
+/// LITERALS
+
+/// Comments
+LineComment = _{ "//" ~ (!("\r" | "\n") ~ ANY)* ~ ("\n" | "\r\n" | "\r" | EOI) }
+BlockComment = _{ "/*" ~ ((!("*/") ~ ANY) | BlockComment)* ~ "*/" }
+Comment = @{ BlockComment | LineComment }
+
+/// Block
+// This allows {} and {statement; statement; statement;} and {statement; expr} and {expr}
+BlockStart = { "{" }
+BlockEnd = { "}" }
+Block = _{ BlockStart ~ Statement* ~ Expr? ~ BlockEnd }
+
+Semi = _{ ";" }
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+Visible = { "pub" }
+Use = { "use" }
+Mod = { "mod" }
+AccessOp = { "." }
+ParenOpen = { "(" }
+ParenClose = { ")" }
+Func = _{ "fn" }
+Mut = { "mut" }
+
+/// #### Identifier Literal #########
+Alpha = _{ 'a'..'z' | 'A'..'Z' }
+Alphanumeric = _{ Alpha | '0'..'9' }
+Identifier = @{ (Alpha | "_") ~ (Alphanumeric | "_")* }
+IdentifierList = _{ Identifier ~ WHITESPACE? ~ ("," ~ WHITESPACE? ~ Identifier)* }
+
+
+/// ### Paths Literal
+PathSep = { "::" }
+ModulePath = @{ Identifier ~ (PathSep ~ Identifier)* }
+
+/// #### Digit Literals #######
+Digit = { '0'..'9' }
+HexDigit = { '0'..'9' | 'A'..'F' | 'a'..'f' }
+OctDigit = { '0'..'7' }
+BinDigit = { '0'..'1' }
+
+/// #### Number Literals #######
+BinInt = @{ "0" ~ ("b" | "B") ~ ("_"? ~ BinDigit)+ }
+OctInt = @{ "0" ~ ("o" | "O") ~ ("_"? ~ OctDigit)+ }
+HexInt = @{ "0" ~ ("x" | "X") ~ ("_"? ~ HexDigit)+ }
+DecInt =  @{ Digit ~ (Digit | "_")* }
+
+Byte = @{ "x" ~ HexDigit{2} }
+Int = _{ BinInt | OctInt | HexInt | DecInt } // i32
+I8Ty = { "i8" }
+I16Ty = { "i16" }
+I32Ty = { "i32" | "int" } // default
+I64Ty = { "i64" }
+I128Ty = { "i128" }
+U8Ty = { "u8" }
+U16Ty = { "u16" }
+U32Ty = { "u32" | "uint" }
+U64Ty = { "u64" }
+U128Ty = { "u128" }
+IntTy = _{ I8Ty | I16Ty | I32Ty | I64Ty | I128Ty }
+UIntTy = _{ U8Ty | U16Ty | U32Ty | U64Ty | U128Ty }
+F32Ty = { "f32" }
+F64Ty = { "f64" } // default
+FloatTy = _{ F32Ty | F64Ty }
+IntI8 = { "-"? ~ Int ~ ":i8" }
+IntI16 = { "-"? ~ Int ~ ":i16" }
+IntI32 = { "-"? ~ Int ~ ":i32" }
+IntI64 = { "-"? ~ Int ~ ":i64" }
+IntI128 = { "-"? ~ Int ~ ":i128" }
+IntU8 = { Int ~ ":u8" }
+IntU16 = { Int ~ ":u16" }
+IntU32 = { Int ~ ":u32" }
+IntU64 = { Int ~ ":u64" }
+IntU128 = { Int ~ ":u128" }
+Exp = { (^"e" | ^"E" ) ~ ("+" | "-")? ~ Int }
+Float = @{ // default to f64
+    "-"? ~ Int ~ "." ~ Int? ~ Exp? |
+    "-"? ~ Int ~ Exp
+}
+Float32 = @{
+    "-"? ~ (Int ~ ":" ~ F32Ty) ~ "." ~ Int? ~ Exp? |
+    "-"? ~ IntU32 ~ Exp
+}
+Float64 = @{
+    "-"? ~ (Int ~ ":" ~ F64Ty) ~ "." ~ Int? ~ Exp? |
+    "-"? ~ IntU64 ~ Exp
+}
+ByteTy = { "byte" }
+
+/// #### Boolean Literals #######
+True  = { "true" | "True" }
+False = { "false" | "False" }
+Bool = { True | False }
+BoolTy = { "bool" }
+
+/// #### String Literals #######
+UnicodeHex = { HexDigit{1, 6} }
+Predefined = { "n" | "r" | "t" | "\\" | "0" | "\"" | "'" }
+Unicode = { "u" ~ "{" ~ UnicodeHex ~ "}" }
+Escape = { "\\" ~ (Predefined | Byte | Unicode) }
+Char = { "'" ~ (Escape | ANY) ~ "'" }
+StringContent = {(!("\\" | "\"") ~ ANY)+ }
+RawStringInterior = {(!("\"" ~ PEEK) ~ ANY )*}
+DoubleQuotedString = @{ "\"" ~ (StringContent | Escape)* ~ "\"" }
+RawString = @{ "r" ~ PUSH("#"*) ~ "\"" ~ RawStringInterior ~ "\"" ~ POP }
+BackquotedQuotedString  = @{ "`" ~ (!("`") ~ ANY)* ~ "`"}
+String = @{
+    RawString |
+    BackquotedQuotedString |
+    DoubleQuotedString 
+}
+StringTy = { "str" | "string" }
+CharTy = { "char" }
+
+Literals = {
+    Byte
+    | IntI8
+    | IntI16
+    | IntI32
+    | IntI64
+    | IntI128
+    | IntU8
+    | IntU16
+    | IntU32
+    | IntU64
+    | IntU128
+    | Float32
+    | Float64
+    | Float
+    | Int
+    | Bool
+    | String
+    | Char
+}
+
+
+/// TYPES
+PrimitiveTypes = _{
+    IntTy
+    | UIntTy
+    | FloatTy
+    | ByteTy
+    | StringTy
+    | BoolTy
+    | CharTy
+}
+
+Type = _{
+    PrimitiveTypes
+}
+
+/// Tuples.
+TupleValue = { "(" ~ WHITESPACE? ~ ((Value ~ WHITESPACE? ~ ","  ~ WHITESPACE?)+ ~ Value?  ~ WHITESPACE?)? ~ WHITESPACE? ~ ")" }
+// Lists.
+ListValue = { "[" ~ WHITESPACE? ~ (Value ~ WHITESPACE? ~ "," ~ WHITESPACE?)* ~ Value? ~ WHITESPACE? ~ "]" }
+// Dictionaries.
+Struct = { "{" ~ (StructElem ~ ",")* ~ StructElem? ~ "}" }
+StructElem = { Identifier ~ ":" ~ Value }
+
+
+
+/// DECLARATION
+ModDeclVisPub = @{ Visible? ~ WHITESPACE ~ Mod ~ WHITESPACE }
+ModDeclVisPri = @{ Mod ~ WHITESPACE }
+ModDeclVis = _{ ModDeclVisPub | ModDeclVisPri }
+ModDecl = { ModDeclVis ~ ModulePath ~ Semi }
+
+ModReExpVisPub = @{ Visible? ~ WHITESPACE ~ Use ~ WHITESPACE }
+ModReExpVisPri = @{ Use ~ WHITESPACE }
+ModReExpVis = _{ ModReExpVisPub | ModReExpVisPri }
+ModReExp = @{ ModulePath ~ (PathSep ~ BlockStart ~ IdentifierList ~ BlockEnd)? ~ Semi }
+ModReExpDecl = { ModReExpVis ~ ModReExp }
+
+VarMut = @{ "let" ~ WHITESPACE ~ Mut ~ WHITESPACE }
+varImmut = @{ "let" ~ WHITESPACE }
+VarMutability = _{ VarMut | varImmut }
+DeclareTypeOp = _{ ":" ~ WHITESPACE? ~ Type  ~ WHITESPACE? }
+VariableDecl = { VarMutability ~ Identifier ~ WHITESPACE? ~ DeclareTypeOp? ~ (AssignOp ~ WHITESPACE? ~ Expr)? ~ Semi}
+
+
+
+/// Function
+FieldAccess = { Identifier ~ AccessOp ~ Identifier ~ FuncParams? }
+FuncParams = { ParenOpen ~ ((Expr | Identifier) ~ ",")* ~ (Expr | Identifier)? ~ ParenClose }
+FuncArg = { Identifier ~ WHITESPACE? ~ ":" ~ WHITESPACE? ~ Type }
+FuncArgs = { ParenOpen ~ (FuncArg ~ ",")* ~ FuncArg? ~ ParenClose }
+FuncCall = { Identifier ~ FuncParams }
+FuncReturnTy = { Type | Identifier }
+FuncDefinition = { Identifier ~ FuncArgs ~ WHITESPACE? ~ "->" ~ WHITESPACE? ~ FuncReturnTy ~ Block }
+FuncVisPub = @{ Visible? ~ WHITESPACE ~ Func ~ WHITESPACE }
+FuncVisPri = @{ Func ~ WHITESPACE }
+FuncVis = _{ FuncVisPub | FuncVisPri }
+FuncDecl = { FuncVis ~ FuncDefinition }
+
+/// #### Custom Types Declaration ####
+//TypeName = @{ 'A'..'Z' ~ Identifier }
+//TupleDecl = { "tuple" ~ WHITESPACE? ~ TypeName ~ WHITESPACE? ~ TupleValue ~ WHITESPACE? ~ Semi }
+//ListDecl = { "list" ~ WHITESPACE? ~ TypeName ~ WHITESPACE? ~ ListValue ~ WHITESPACE? ~ Semi }
+
+
+Declaration = { 
+    ModDecl
+    | ModReExpDecl
+    //| TupleDecl
+    //| ListDecl
+    | FuncDecl
+    | VariableDecl
+}
+
+/// Operators
+
+/// #### Operators Literals #######
+/// Arithmetic Operators
+PlusOp =  { "+" }
+MinusOp = { "-" }
+TimesOp = { "*" }
+DivideOp = { "/" }
+ModuloOp = { "%" }
+
+ArithInfix = _{
+    PlusOp
+    | MinusOp
+    | TimesOp
+    | DivideOp
+    | ModuloOp
+}
+
+ArithUnaryExpr = { (PlusOp | MinusOp)? ~ Value }
+ArithBinaryExpr = { (ArithUnaryExpr | Identifier) ~ (ArithInfix ~ (ArithUnaryExpr | Identifier))+ }
+
+/// Assignment Operators
+AssignOp = { "=" }
+PlusAssignOp =  { "+=" }
+MinusAssignOp = { "-=" }
+TimesAssignOp = { "*=" }
+DivideAssignOp = { "/=" }
+ModuloAssignOp = { "%=" }
+
+AssignInfix = _{
+    AssignOp
+    | PlusAssignOp
+    | MinusAssignOp
+    | TimesAssignOp
+    | DivideAssignOp
+    | ModuloAssignOp
+}
+
+AssignBinaryExpr = { (ArithUnaryExpr | Identifier) ~ (AssignInfix ~ (ArithUnaryExpr | Identifier))+ }
+
+/// Logical Operators
+AndOp = { "&&" }
+OrOp = { "||" }
+NotOp = { "!" }
+
+LogicInfix = _{
+    AndOp
+    | OrOp
+}
+
+LogicUnaryExpr = { NotOp ~ (Value | Identifier) }
+LogicBinaryExpr = { (Value | Identifier)? ~ (LogicInfix ~ (Value | Identifier))+ }
+
+/// Bitwise Operators
+BitwiseAndOp = { "&" }
+BitwiseOrOp = { "|" }
+BitwiseNotOp = { "^" }
+BitwiseLeftShiftOp = { "<<" }
+BitwiseRightShiftOp = { ">>" }
+
+BitwiseInfix = _{
+    BitwiseAndOp
+    | BitwiseOrOp
+    | BitwiseNotOp
+    | BitwiseLeftShiftOp
+    | BitwiseRightShiftOp
+}
+
+BitwiseBinaryExpr = { (Value | Identifier)? ~ (BitwiseInfix ~ (Value | Identifier))+ }
+
+/// Comparison Operators
+EqualOp = { "==" }
+NotEqualOp = { "!=" }
+GreaterOp = { ">" }
+GreaterEqualOp = { ">=" }
+LowerOp = { "<" }
+LowerEqualOp = { "<=" }
+
+ComparisonInfix = _{
+    EqualOp
+    | NotEqualOp
+    | GreaterOp
+    | GreaterEqualOp
+    | LowerOp
+    | LowerEqualOp
+}
+
+ComparisonBinaryExpr = { (Value | Identifier)? ~ (ComparisonInfix ~ (Value | Identifier))+ }
+
+/// Piped Operators
+LeftPipedOp = { "<|" }
+RightPipedOp = { "|>" }
+
+PipedOp = _{
+    RightPipedOp
+    | LeftPipedOp
+}
+
+PipedExpr = { Expr ~ PipedOp ~ Expr }
+
+/// VALUES
+Value = _{ 
+    ParenOpen ~ Expr ~ ParenClose
+    | Literals
+}
+
+/*
+| If of Expr * Expr
+| Return of Expr
+| While of Expr * Expr
+| For of Expr * Expr * Expr * Expr
+*/
+
+/// Expression
+Expr = {
+    | AssignBinaryExpr
+    | ArithBinaryExpr
+    | ArithUnaryExpr
+    | LogicBinaryExpr
+    | LogicUnaryExpr
+    | BitwiseBinaryExpr
+    | ComparisonBinaryExpr
+    | Value
+    | FuncCall
+    | PipedExpr
+}
+
+/// Statement
+Statement = { 
+    | Declaration 
+    //| while_loop 
+    //| conditional 
+    | (Expr ~ Semi?) 
+    | Comment 
+}
