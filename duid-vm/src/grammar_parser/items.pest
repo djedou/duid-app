@@ -1,10 +1,8 @@
-ModuleFile = _{ SOI ~ (Item | Expression | Comment)* ~ EOI }
 
 ItemVis = @{ Visibility ~ WHITESPACE }
-Module = @{
-    ((KW_MOD ~ WHITESPACE) ~ SimplePath ~ WHITESPACE? ~ Semi)
-    | ((KW_MOD ~ WHITESPACE) ~ SimplePath ~ PathSep ~ CurlyBracesOpen ~ WHITESPACE? ~ (SimplePath  ~ WHITESPACE? ~ Comma? ~ WHITESPACE?)* ~ CurlyBracesClose ~ WHITESPACE? ~ Semi)
-}
+ModuleItemExported = { PathSep ~ CurlyBracesOpen ~ WHITESPACE? ~ (SimplePath  ~ WHITESPACE? ~ Comma? ~ WHITESPACE?)* ~ CurlyBracesClose }
+ModulePath = @{ KW_MOD ~ WHITESPACE ~ SimplePath }
+
 
 UseTree = @{
     (SimplePath? ~ PathSep)? ~ Star
@@ -22,7 +20,10 @@ SelfParam = { ShorthandSelf | TypedSelf }
 ShorthandSelf = { And? ~ KW_MUT? ~ WHITESPACE ~ KW_SELFVALUE }
 
 TypedSelf = { KW_MUT? ~ WHITESPACE ~ KW_SELFVALUE ~ WHITESPACE? ~ Colon ~ WHITESPACE? ~ Type  }
-FunctionParam = { DotDotDot | Type }
+
+FunctionParamType = { Colon ~ WHITESPACE? ~ (Type | Expression) }
+FunctionParamVar = { Identifier ~ WHITESPACE? }
+FunctionParam = { DotDotDot | (FunctionParamVar ~ FunctionParamType) }
 
 FunctionReturnType = { RArrow ~ WHITESPACE? ~ Type }
 FunctionArgs = { ParenthesesOpen ~ WHITESPACE? ~ FunctionParameters? ~ WHITESPACE? ~ ParenthesesClose }
@@ -72,8 +73,7 @@ Implementation = { KW_IMPL ~ WHITESPACE? ~ Type ~ WHITESPACE? ~ ImplementationBl
 
 Item = {
     ItemVis? ~ (
-        Module
-        | UseDeclaration
+        UseDeclaration
         | Struct
         | Enumeration
         | Implementation
@@ -86,3 +86,4 @@ Item = {
 Type = @{ 
     (AlphaUp ~ Identifier) ~ GenericParams?
 }
+

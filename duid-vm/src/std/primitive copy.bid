@@ -6,6 +6,7 @@ pub use std::primitives_types::{};
 use std::primitives_types::{p::data,p::data};
 
 25 + 89;
+
 /*
 pub struct Int8;
 
@@ -13,3 +14,65 @@ impl Int8 {
 
 }
 */
+
+
+/*
+manger
+*/
+/* hgjklk*/
+
+pub struct Int8;
+
+pub struct Int {
+    pub value: Int8,
+    pub value: Int8
+}
+
+pub struct TupleStruct(Int8, Int32, Int64);
+
+struct Int8;
+
+struct Int {
+    pub value: Int8,
+    pub value: Int8
+}
+
+struct TupleStruct(Int8,Int32,Int64);
+pub enum Enuma<Ty> {
+    Abi(Int8,Int32,Int64),
+    Value,
+    StructEnum {
+        b: Int8,
+        c: Ty
+    }
+}
+
+pub enum Enuma<Ty:Int> {
+    Abi(Int8,Int32,Int64),
+    Value,
+    StructEnum {
+        b: Int8,
+        c: Ty
+    }
+}
+
+
+impl Int8 {
+    fn new() -> Int8 {
+        return Int8;
+    }
+}
+
+pub fn add(a: Int8, b: Int8) -> Int8 {
+    let c = a + b;
+    let va: Int32 = (45, 78, 96);
+    let va: (Int32, Int64, Int16) = (45, 78, 96);
+    return c;
+}
+
+pub fn addArray(a: [Int8; 5], b: Int8) -> Int8 {
+    let c = a + b;
+    let va: Int32 = (45, 78, 96);
+    let va: (Int32, Int64, Int16) = (45, 78, 96);
+    return c;
+}

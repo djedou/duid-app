@@ -234,7 +234,7 @@ DotDotEq = { "..=" } // Inclusive Range, Range patterns
 Comma = _{ "," } // Various separators
 Semi = _{ ";" } // Terminator for various items and statements, Array types
 Colon = _{ ":" } // Various separators
-PathSep = { "::" } // Path separator
+PathSep = _{ "::" } // Path separator
 RArrow = _{ "->" } // Function return type, Closure return type, Function pointer type
 FatArrow = { "=>" } // Match arms, Macros
 Pound = { "#" } // Attributes

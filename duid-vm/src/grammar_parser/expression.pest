@@ -63,14 +63,14 @@ OperatorExpression = {
 GroupedExpression = { ParenthesesOpen ~ WHITESPACE? ~ Literals ~ WHITESPACE? ~ ParenthesesClose }
 ArrayExpression = { SquareBracketsOpen ~ WHITESPACE? ~ ArrayElements? ~ WHITESPACE? ~ SquareBracketsClose }
 ArrayElements = {
-    Literals ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ Literals ~ WHITESPACE?)* ~ Comma?
-    | (Literals ~ WHITESPACE? ~ Semi ~ WHITESPACE? ~ Literals)
+    Type ~ WHITESPACE? ~ Semi ~ WHITESPACE? ~ Literals
+    | Literals ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ Literals ~ WHITESPACE?)* ~ Comma?
 }
 AwaitExpression = { Literals ~ Dot ~ KW_AWAIT }
 IndexExpression = { Literals ~ SquareBracketsOpen ~ Literals ~ SquareBracketsClose }
 
 TupleExpression = { ParenthesesOpen ~ WHITESPACE? ~ TupleElements? ~ WHITESPACE? ~ ParenthesesClose }
-TupleElements = { (Literals ~ WHITESPACE? ~ Comma)+ ~ WHITESPACE? ~ Literals? }
+TupleElements = { ((Type | Literals) ~ WHITESPACE? ~ Comma)+ ~ WHITESPACE? ~ (Type | Literals)? }
 TupleIndexingExpression  = { Literals ~ Comma ~ DecInt }
 
 /*

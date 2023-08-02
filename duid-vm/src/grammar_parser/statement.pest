@@ -1,6 +1,6 @@
 
 LetVariable = @{ Identifier ~ WHITESPACE? }
-LetType = { (Colon ~ WHITESPACE? ~ Type ~ WHITESPACE?) }
+LetType = { (Colon ~ WHITESPACE? ~ (Type | Expression) ~ WHITESPACE?) }
 LetBlock = { Eq ~ WHITESPACE? ~ Expression }
 LetStatement = {  KW_LET ~ WHITESPACE? ~ LetVariable ~ LetType? ~ LetBlock? ~ WHITESPACE? ~ Semi? }
 ExpressionStatement = { (ExpressionWithoutBlock ~ WHITESPACE? ~ Semi) | (ExpressionWithBlock ~ WHITESPACE? ~ Semi?) }

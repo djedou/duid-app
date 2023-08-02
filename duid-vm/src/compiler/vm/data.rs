@@ -7,7 +7,7 @@ pub enum DataType {
     None,
     //Module,
     Int8,
-    CustomType(String)
+    //CustomType(String)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -16,7 +16,7 @@ pub enum DataValue {
     None,
     //Module(Vec<Data>),
     Int8(u8),
-    CustomTypeValue((String, String))
+    //CustomTypeValue((String, String))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]

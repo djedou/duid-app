@@ -7,7 +7,7 @@ Visibility = @{
     | (KW_PUB ~ ParenthesesOpen ~ KW_IN ~ SimplePath ~ ParenthesesClose)
 }
 
-SimplePath = {
+SimplePath = _{
     PathSep? ~ SimplePathSegment ~ (PathSep ~ SimplePathSegment)*
 }
 

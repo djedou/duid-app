@@ -11,6 +11,7 @@ use crate::ast::{Module, Visibility, Declaration/*, Statement, Expression, , */}
 #[grammar = "./src/grammar_parser/names.pest"]
 #[grammar = "./src/grammar_parser/expression.pest"]
 #[grammar = "./src/grammar_parser/statement.pest"]
+#[grammar = "./src/grammar_parser/entry_point.pest"]
 struct DuidParser;
 
 
@@ -24,7 +25,7 @@ pub fn parse(source: &str) -> std::result::Result<Module, pest::error::Error<Rul
             for pair in pairs {
                 match pair.as_rule() {
                     Rule::Item => {
-                        //build_ast_from_declaration(pair.into_inner().next().unwrap(), &mut ast);
+                        build_ast_from_declaration(pair.into_inner().next().unwrap(), &mut ast);
                     },
                     Rule::Expression => {
 
@@ -42,12 +43,12 @@ pub fn parse(source: &str) -> std::result::Result<Module, pest::error::Error<Rul
     println!("module loaded: {:#?}", ast);
     Ok(ast)
 }
-/*
+
 fn build_ast_from_declaration(pair: pest::iterators::Pair<Rule>, module: &mut Module) {
     match pair.as_rule() {
-        Rule::ModDecl => {
+        Rule::Module => {
             for p in pair.clone().into_inner() {
-                match p.as_rule() {
+                /*match p.as_rule() {
                     Rule::ModDeclVisPub => {
                         module.visible = Visibility::Public;
                     },
@@ -60,10 +61,10 @@ fn build_ast_from_declaration(pair: pest::iterators::Pair<Rule>, module: &mut Mo
                     res => {
                         println!("in module declaration: {:#?}", res);
                     }
-                }
+                }*/
             }
         },
-        Rule::TypeDecl => {
+        /*Rule::TypeDecl => {
             for td in pair.clone().into_inner() {
                 match td.as_rule() {
                     Rule::UnitStructTyDecl => {
@@ -100,12 +101,12 @@ fn build_ast_from_declaration(pair: pest::iterators::Pair<Rule>, module: &mut Mo
                     }
                 }
             }
-        },
+        },*/
         res => {
             println!("rest: {:#?}", res);
         }
     }
-}*/
+}
 
 #[cfg(test)]
 mod parser_tests {
