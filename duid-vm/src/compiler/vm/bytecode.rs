@@ -1,23 +1,21 @@
 use crate::compiler::vm::{make_op, OpCode};
-use crate::{Compile, Module/*, Operator*/};
-use std::collections::BTreeMap;
-use crate::vm::data::Data;
+use crate::{Compile, Ast};
+use crate::ast::*;
+use crate::vm::data::{DataValue, DataType};
 
 pub type ModuleKey = String;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 // ANCHOR: bytecode
 pub struct Bytecode {
-    pub code: Vec<u8>,
-    pub modules: BTreeMap<ModuleKey, Data>,
+    pub code: Vec<u8>
 }
 // ANCHOR_END: bytecode
 
 impl Bytecode {
     fn new() -> Self {
         Self {
-            code: Vec::new(),
-            modules: BTreeMap::new(),
+            code: Vec::new()
         }
     }
 }
@@ -30,62 +28,165 @@ pub struct Interpreter {
 impl Compile for Interpreter {
     type Output = Bytecode;
 
-    fn from_ast(ast: Module) -> Self::Output {
+    fn from_ast(ast: Ast) -> Self::Output {
+        //println!("Builded Ast: {:#?}", ast);
         let mut interpreter = Interpreter {
             bytecode: Bytecode::new(),
         };
-        /*for node in ast.statements {
-            println!("compiling node Djedou {:?}", node);
-            //interpreter.interpret_node(node);
-            // pop one element from the stack after
-            // each expression statement to clean up
-            //interpreter.add_instruction(OpCode::OpPop);
-        }*/
+
+        for content in ast.module.contents {
+            match content {
+                ModuleContent::None => {
+
+                },
+                ModuleContent::Item(_) => {
+
+                },
+                ModuleContent::Expr(Expression::WithoutBlock(expr)) => {
+                    interpreter.add_without_block(expr);
+                },
+                _ => {
+
+                }
+            }
+        }
+
         interpreter.bytecode
     }
 }
 // ANCHOR_END: bytecode_interpreter
 
 impl Interpreter {
-    /*fn add_constant(&mut self, node: Node) -> u16 {
-        self.bytecode.constants.push(node);
-        (self.bytecode.constants.len() - 1) as u16 // cast to u16 because that is the size of our constant pool index
-    }
+    fn add_without_block(&mut self, without_block: ExprWithoutBlck) {
+        match without_block {
+            ExprWithoutBlck::GroupedExpression => {
 
-    fn add_instruction(&mut self, op_code: OpCode) -> u16 {
-        let position_of_new_instruction = self.bytecode.instructions.len() as u16;
-        self.bytecode.instructions.extend(make_op(op_code));
-        println!(
-            "added instructions {:?} from opcode {:?}",
-            self.bytecode.instructions,
-            op_code.clone()
-        );
-        position_of_new_instruction
-    }
+            },
+            ExprWithoutBlck::ArrayExpression => {
 
-    fn interpret_node(&mut self, node: Node) {
-        match node {
-            Node::Int(num) => {
-                let const_index = self.add_constant(Node::Int(num));
-                self.add_instruction(OpCode::OpConstant(const_index));
-            }
-            Node::UnaryExpr { op, child } => {
-                self.interpret_node(*child);
-                match op {
-                    Operator::Plus => self.add_instruction(OpCode::OpPlus),
-                    Operator::Minus => self.add_instruction(OpCode::OpMinus),
-                };
-            }
-            Node::BinaryExpr { op, lhs, rhs } => {
-                self.interpret_node(*lhs);
-                self.interpret_node(*rhs);
-                match op {
-                    Operator::Plus => self.add_instruction(OpCode::OpAdd),
-                    Operator::Minus => self.add_instruction(OpCode::OpSub),
-                };
-            }
-        };
-    }*/
+            },
+            ExprWithoutBlck::TupleExpression => {
+
+            },
+            ExprWithoutBlck::StructExpression => {
+
+            },
+            ExprWithoutBlck::ClosureExpression => {
+
+            },
+            ExprWithoutBlck::AsyncBlockExpression => {
+
+            },
+            ExprWithoutBlck::ContinueExpression => {
+
+            },
+            ExprWithoutBlck::BreakExpression => {
+
+            },
+            ExprWithoutBlck::ReturnExpression => {
+
+            },
+            ExprWithoutBlck::UnderscoreExpression => {
+
+            },
+            ExprWithoutBlck::OpExpr(OpExpr::ArithOrLogExpr(op_expr)) => {
+                match op_expr.op {
+                    ArithOrLogExpr::Plus => {
+                        match (op_expr.lhs.clone(), op_expr.rhs) {
+                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            
+                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&[rhs, lhs, u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
+                            },
+                            (_, _) => {
+                                panic!("lhs and rhs should have the same datatype!");
+                            }
+                        }
+                    },
+                    _ => {
+
+                    }
+                }
+            },
+            ExprWithoutBlck::IndexExpression => {
+
+            },
+            ExprWithoutBlck::AwaitExpression => {
+
+            },
+            ExprWithoutBlck::TupleIndexingExpression => {
+
+            },
+            ExprWithoutBlck::CallExpression => {
+
+            },
+            ExprWithoutBlck::MethodCallExpression => {
+
+            },
+            ExprWithoutBlck::FieldExpression => {
+
+            },
+            ExprWithoutBlck::RangeExpression => {
+
+            },
+            _ => {}
+        }
+    }
 }
 
 #[cfg(test)]

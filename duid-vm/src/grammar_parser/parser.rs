@@ -1,8 +1,8 @@
 #![allow(clippy::upper_case_acronyms)]
 
 use pest::{self, Parser, pratt_parser::PrattParser};
-use crate::compiler::vm::data::{Data, DataType};
-use crate::ast::{Module, Visibility, Declaration/*, Statement, Expression, , */};
+use crate::compiler::vm::data::{DataType, DataValue, Variable};
+use crate::ast::{*};
 
 // ANCHOR: parser
 #[derive(pest_derive::Parser)]
@@ -15,20 +15,25 @@ use crate::ast::{Module, Visibility, Declaration/*, Statement, Expression, , */}
 struct DuidParser;
 
 
-pub fn parse(source: &str) -> std::result::Result<Module, pest::error::Error<Rule>> {
-    let mut ast = Module::new();
-    //let pratt = PrattParser::new();
+pub fn parse(source: &str) -> std::result::Result<Ast, pest::error::Error<Rule>> {
+    
+    let mut ast = Ast {
+        module: Module::new()
+    };
 
     match DuidParser::parse(Rule::ModuleFile, source) {
         Ok(pairs) => {
-            println!("pairs: {:#?}", pairs);
+            //println!("pairs: {:#?}", pairs);
             for pair in pairs {
                 match pair.as_rule() {
+                    Rule::Module => {
+                        ast = build_ast_from_module(pair);
+                    },
                     Rule::Item => {
-                        build_ast_from_declaration(pair.into_inner().next().unwrap(), &mut ast);
+                        ast.extend_module_content(&build_ast_from_item(pair.clone()));
                     },
                     Rule::Expression => {
-
+                        ast.extend_module_content(&build_ast_from_expr(pair.clone()));
                     },
                     _ => {}
                 }
@@ -40,70 +45,372 @@ pub fn parse(source: &str) -> std::result::Result<Module, pest::error::Error<Rul
         }
     }
     
-    println!("module loaded: {:#?}", ast);
     Ok(ast)
 }
 
-fn build_ast_from_declaration(pair: pest::iterators::Pair<Rule>, module: &mut Module) {
-    match pair.as_rule() {
-        Rule::Module => {
-            for p in pair.clone().into_inner() {
-                /*match p.as_rule() {
-                    Rule::ModDeclVisPub => {
-                        module.visible = Visibility::Public;
-                    },
-                    Rule::ModDeclVisPri => {
-                        module.visible = Visibility::Privite;
-                    },
-                    Rule::ModuleNamespace => {
-                        module.namespace = p.as_str().to_string();
-                    },
-                    res => {
-                        println!("in module declaration: {:#?}", res);
-                    }
-                }*/
-            }
-        },
-        /*Rule::TypeDecl => {
-            for td in pair.clone().into_inner() {
-                match td.as_rule() {
-                    Rule::UnitStructTyDecl => {
-                        let mut data = Data::default();
+fn build_ast_from_module(pair: pest::iterators::Pair<Rule>) -> Ast {
+    
+    let mut module_header = ModuleHeader::new();
+    let mut module_contents: Vec<_> = vec![];
 
-                        for utd in td.clone().into_inner() {
-                            match utd.as_rule() {
-                                Rule::StructVisPub => {
-                                    data.visible = Visibility::Public;
-                                },
-                                Rule::StructVisPri => {
-                                    data.visible = Visibility::Privite;
-                                },
-                                Rule::Type => {
-                                    match utd.as_str() {
-                                        "Int8" => {
-                                            data.type_ = DataType::Int8;
-                                        },
-                                        value => {
-                                            panic!("UnDeclare type: {}", value);
-                                        } 
+    for pa in pair.clone().into_inner() {
+        match pa.as_rule() {
+            Rule::ModuleHeader => {
+                for p in pa.clone().into_inner() {
+                    match p.as_rule() {
+                        Rule::ItemVis => {
+                            module_header.visible = Visibility::Public;
+                        },
+                        Rule::ModulePath => {
+                            module_header.namespace = Some(p.as_str().trim_start_matches("mod ").to_string());
+                        },
+                        Rule::ModuleItemExported => {
+                            for exp in p.clone().into_inner() {
+                                match exp.as_rule() {
+                                    Rule::SimplePathSegment => {
+                                        module_header.exported.push(DataType::from(exp.as_str()));
+                                    },
+                                    _ => {}
+                                }
+                            }
+                        },
+                        _ => {}
+                    }
+                }
+            },
+            Rule::ModuleContent => {
+                for p in pa.clone().into_inner() {
+                    match p.as_rule() {
+                        Rule::Item => {
+                            module_contents.extend_from_slice(&build_ast_from_item(p.clone()));
+                        },
+                        Rule::Expression => {
+                            module_contents.extend_from_slice(&build_ast_from_expr(p.clone()));
+                        },
+                        _ => {}
+                    }
+                }
+            },
+            _ => {}
+        }
+    }
+
+    Ast {
+        module: Module {
+            header: module_header,
+            contents: module_contents
+        }
+    }
+}
+
+
+fn build_ast_from_item(pair: pest::iterators::Pair<Rule>) -> Vec<ModuleContent> {
+    pair.clone().into_inner()
+    .into_iter()
+    .map(|p| {
+        match p.as_rule() {
+            Rule::UnitStruct => {
+                match p.clone().into_inner().next() {
+                    Some(d) => {
+                        match d.as_str() {
+                            "Int8" => {
+                                let data_type = DataType::from("Int8");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Int16" => {
+                                let data_type = DataType::from("Int16");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Int32" => {
+                                let data_type = DataType::from("Int32");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Int64" => {
+                                let data_type = DataType::from("Int64");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Int128" => {
+                                let data_type = DataType::from("Int128");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "UInt8" => {
+                                let data_type = DataType::from("UInt8");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "UInt16" => {
+                                let data_type = DataType::from("UInt16");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "UInt32" => {
+                                let data_type = DataType::from("UInt32");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "UInt64" => {
+                                let data_type = DataType::from("UInt64");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "UInt128" => {
+                                let data_type = DataType::from("UInt128");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Float32" => {
+                                let data_type = DataType::from("Float32");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Float64" => {
+                                let data_type = DataType::from("Float64");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            _ => ModuleContent::None
+                        }
+                    },
+                    None => ModuleContent::None
+                }
+            },
+            _ => ModuleContent::None
+        }
+    })
+    .filter(|p| p != &ModuleContent::None)
+    .collect()
+}
+
+fn build_ast_from_expr(pair: pest::iterators::Pair<Rule>) -> Vec<ModuleContent> {
+    pair.clone().into_inner()
+    .into_iter()
+    .map(|p| {
+        match p.as_rule() {
+            Rule::ExpressionWithoutBlock => {
+                ModuleContent::Expr(Expression::WithoutBlock(
+                    match p.clone().into_inner().next() {
+                        Some(d) => {
+                            match d.as_rule() {
+                                Rule::OperatorExpression => build_operator_expression(d),
+                                _ => {
+                                    panic!("");
+                                }
+                            }
+                        },
+                        None => {
+                            panic!("!!");
+                        }
+                }))
+            },
+            Rule::ExpressionWithBlock => {
+                ModuleContent::None
+            },
+            _ => {
+                panic!("eee!");
+            }
+        }
+    })
+    .filter(|p| p != &ModuleContent::None)
+    .collect()
+}
+
+fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBlck {
+    match pair.into_inner().next() {
+        Some(p) => {
+            ExprWithoutBlck::OpExpr(
+                match p.as_rule() {
+                    Rule::ArithmeticOrLogicalExpression => {
+                        let mut data = BinaryExpr::new();
+                        for i in p.into_inner() {
+                            match i.as_rule() {
+                                Rule::DecInt => {
+                                    if data.lhs == DataValue::None {
+                                        data.lhs = DataValue::Int32(i.as_str().parse::<i32>().unwrap());
+                                    }
+                                    else {
+                                        data.rhs = DataValue::Int32(i.as_str().parse::<i32>().unwrap());
                                     }
                                 },
-                                res => {
-                                    println!("in module declaration: {:#?}", res);
+                                Rule::Float => {
+                                    if data.lhs == DataValue::None {
+                                        data.lhs = DataValue::Float64(eq_float::F64(i.as_str().parse::<f64>().unwrap()));
+                                    }
+                                    else {
+                                        data.rhs = DataValue::Float64(eq_float::F64(i.as_str().parse::<f64>().unwrap()));
+                                    }
+                                },
+                                Rule::Plus => {
+                                    data.op = ArithOrLogExpr::Plus;
+                                },
+                                Rule::Identifier => {
+                                    if data.lhs == DataValue::None {
+                                        data.lhs = DataValue::Variable(Variable {
+                                            value: i.as_str().to_string(),
+                                            data_type: DataType::None
+                                        });
+                                    }
+                                    else {
+                                        data.rhs = DataValue::Variable(Variable {
+                                            value: i.as_str().to_string(),
+                                            data_type: DataType::None
+                                        });
+                                    }
+                                },
+                                Rule::Annotated => {
+                                    let mut value = "";
+                                    let mut data_type = DataType::None;
+
+                                    for m in i.into_inner() {
+                                        match m.as_rule() {
+                                            Rule::Identifier => {
+                                                value = m.as_str();
+                                                data_type = DataType::Variable;
+                                            },
+                                            Rule::Type => {
+                                                data_type = DataType::from(m.as_str())
+                                            },
+                                            _ => {
+                                                value = m.as_str();
+                                            }
+                                        }
+                                    }
+
+                                    match data_type {
+                                        DataType::Int8 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = match value.parse::<i8>() {
+                                                                Ok(v) => DataValue::Int8(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::Int8
+                                                                })
+                                                            };
+                                            }
+                                            else {
+                                                data.rhs = match value.parse::<i8>() {
+                                                    Ok(v) => DataValue::Int8(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::Int8
+                                                    })
+                                                };
+                                                
+                                            }
+                                        },
+                                        DataType::Int16 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::Int16(value.parse::<i16>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::Int16(value.parse::<i16>().unwrap());
+                                            }
+                                        },
+                                        DataType::Int32 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::Int32(value.parse::<i32>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::Int32(value.parse::<i32>().unwrap());
+                                            }
+                                        },
+                                        DataType::Int64 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::Int64(value.parse::<i64>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::Int64(value.parse::<i64>().unwrap());
+                                            }
+                                        },
+                                        DataType::Int128 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::Int128(value.parse::<i128>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::Int128(value.parse::<i128>().unwrap());
+                                            }
+                                        },
+                                        DataType::UInt8 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::UInt8(value.parse::<u8>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::UInt8(value.parse::<u8>().unwrap());
+                                            }
+                                        },
+                                        DataType::UInt16 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::UInt16(value.parse::<u16>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::UInt16(value.parse::<u16>().unwrap());
+                                            }
+                                        },
+                                        DataType::UInt32 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::UInt32(value.parse::<u32>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::UInt32(value.parse::<u32>().unwrap());
+                                            }
+                                        },
+                                        DataType::UInt64 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::UInt64(value.parse::<u64>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::UInt64(value.parse::<u64>().unwrap());
+                                            }
+                                        },
+                                        DataType::UInt128 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::UInt128(value.parse::<u128>().unwrap());
+                                            }
+                                            else {
+                                                data.rhs = DataValue::UInt128(value.parse::<u128>().unwrap());
+                                            }
+                                        },
+                                        DataType::Float32 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::Float32(eq_float::F32(value.parse::<f32>().unwrap()));
+                                            }
+                                            else {
+                                                data.rhs = DataValue::Float32(eq_float::F32(value.parse::<f32>().unwrap()));
+                                            }
+                                        },
+                                        DataType::Float64 => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::Float64(eq_float::F64(value.parse::<f64>().unwrap()));
+                                            }
+                                            else {
+                                                data.rhs = DataValue::Float64(eq_float::F64(value.parse::<f64>().unwrap()));
+                                            }
+                                        },
+                                        DataType::Variable => {
+                                            if data.lhs == DataValue::None {
+                                                data.lhs = DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::None
+                                                });
+                                            }
+                                            else {
+                                                data.rhs = DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::None
+                                                });
+                                            }
+                                        },
+                                        _ => {}
+                                    }
+                                }
+                                r => {
+                                    panic!("Rule {:?} is not yet implemented!!", r);
                                 }
                             }
                         }
 
-                        module.declarations.push(Declaration::TypeDecl{data});
+                        OpExpr::ArithOrLogExpr(data)
                     },
-                    res => {
-                        println!("in module declaration: {:#?}", res);
+                    _ => {
+                        panic!("Missing Expression without block!");
                     }
                 }
-            }
-        },*/
-        res => {
-            println!("rest: {:#?}", res);
+            )
+        },
+        None => {
+            panic!("Missing Expression without block!");
         }
     }
 }

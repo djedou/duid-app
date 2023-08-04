@@ -2,7 +2,7 @@ pub mod ast;
 pub mod compiler;
 pub mod grammar_parser;
 
-pub use crate::ast::{Module};
+pub use crate::ast::{Ast};
 //pub use crate::compiler::interpreter::Interpreter;
 pub use crate::compiler::vm::{self, vm::DuidVm};
 
@@ -23,11 +23,11 @@ pub fn run_vm() {
 pub trait Compile {
     type Output;
 
-    fn from_ast(ast: Module) -> Self::Output;
+    fn from_ast(ast: Ast) -> Self::Output;
 
     fn from_source(source: &str) -> Self::Output {
         //println!("Compiling the source: {}", source);
-        let ast: Module = grammar_parser::parse(source).unwrap();
+        let ast: Ast = grammar_parser::parse(source).unwrap();
         //println!("{:?}", ast);
         Self::from_ast(ast)
     }

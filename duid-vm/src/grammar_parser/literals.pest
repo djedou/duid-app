@@ -185,12 +185,12 @@ StringLiteral  = @{
 Annotated = { (Float | Int | Identifier) ~ WHITESPACE? ~ Colon ~ WHITESPACE? ~ Type }
 
 Literals = _{
-    Byte
+    Annotated
+    | Byte
     | Float
     | Int
     | Bool
     | Identifier
-    | Annotated
     | StringLiteral
     | CharLiteral
 }

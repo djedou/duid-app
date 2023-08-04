@@ -1,9 +1,19 @@
-pub mod std::primitives_types::{ data, pdata };
+pub mod std::primitives_types::{ 
+    Int8, Int16, Int32, Int64, Int128, 
+    UInt8, UInt16, UInt32, UInt64, UInt128, 
+    Float32, Float64,
+};
 
-
-pub use std::primitives_types::*;
-pub use std::primitives_types as Primitive;
-pub use std::primitives_types::{};
-use std::primitives_types::{p::data,p::data};
 
 pub struct Int8;
+pub struct Int16;
+pub struct Int32;
+pub struct Int64;
+pub struct Int128;
+pub struct UInt8;
+pub struct UInt16;
+pub struct UInt32;
+pub struct UInt64;
+pub struct UInt128;
+pub struct Float32;
+pub struct Float64;

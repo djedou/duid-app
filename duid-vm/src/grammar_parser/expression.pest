@@ -73,7 +73,6 @@ TupleExpression = { ParenthesesOpen ~ WHITESPACE? ~ TupleElements? ~ WHITESPACE?
 TupleElements = { ((Type | Literals) ~ WHITESPACE? ~ Comma)+ ~ WHITESPACE? ~ (Type | Literals)? }
 TupleIndexingExpression  = { Literals ~ Comma ~ DecInt }
 
-/*
 StructExprStruct = { Type ~ WHITESPACE? ~ CurlyBracesOpen ~ WHITESPACE? ~ (StructExprFields | StructBase)? ~ WHITESPACE? ~ CurlyBracesClose }
 StructExprFields = { StructExprField ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ StructExprField)* ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ StructBase | Comma?) }
 StructExprField  = { 
@@ -90,7 +89,7 @@ StructExpression = {
     | StructExprTuple
     | StructExprUnit
 }
-*/
+
 CallExpression = {
     Literals ~ WHITESPACE? ~ ParenthesesOpen ~ WHITESPACE? ~ CallParams? ~ WHITESPACE? ~ ParenthesesClose
 }
@@ -134,7 +133,7 @@ ExpressionWithoutBlock = {
     | GroupedExpression
     | ArrayExpression
     | TupleExpression
-    //| StructExpression
+    | StructExpression
     | ClosureExpression
     | AsyncBlockExpression
     | ContinueExpression
