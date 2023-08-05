@@ -2,7 +2,11 @@
 // ANCHOR: vm_opcode
 pub enum OpCode {
     OpReturn,
-    OpAdd
+    OpAdd,
+    OpMinus,
+    OpStar,
+    OpSlash,
+    OpPercent,
 }
 // ANCHOR_END: vm_opcode
 
@@ -23,6 +27,10 @@ fn make_three_byte_op(code: u8, data: u16) -> Vec<u8> {
 pub fn make_op(op: OpCode) -> u8 {
     match op {
         OpCode::OpReturn => 0x05,
-        OpCode::OpAdd => 0x10
+        OpCode::OpAdd => 0x10,
+        OpCode::OpMinus => 0x11,
+        OpCode::OpStar => 0x12,
+        OpCode::OpSlash => 0x13,
+        OpCode::OpPercent => 0x14,
     }
 }

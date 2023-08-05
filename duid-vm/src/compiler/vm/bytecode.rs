@@ -154,7 +154,272 @@ impl Interpreter {
                                 self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpAdd)]);
                             },
                             (_, _) => {
-                                panic!("lhs and rhs should have the same datatype!");
+                                println!("lhs and rhs should have the same Datatype!");
+                            }
+                        }
+                    },
+                    ArithOrLogExpr::Minus => {
+                        match (op_expr.lhs.clone(), op_expr.rhs) {
+                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            
+                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&[rhs, lhs, u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpMinus)]);
+                            },
+                            (_, _) => {
+                                println!("lhs and rhs should have the same Datatype!");
+                            }
+                        }
+                    },
+                    ArithOrLogExpr::Star => {
+                        match (op_expr.lhs.clone(), op_expr.rhs) {
+                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&[rhs, lhs, u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpStar)]);
+                            },
+                            (_, _) => {
+                                println!("lhs and rhs should have the same Datatype!");
+                            }
+                        }
+                    },
+                    ArithOrLogExpr::Slash => {
+                        match (op_expr.lhs.clone(), op_expr.rhs) {
+                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&[rhs, lhs, u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpSlash)]);
+                            },
+                            (_, _) => {
+                                println!("lhs and rhs should have the same Datatype!");
+                            }
+                        }
+                    },
+                    ArithOrLogExpr::Percent => {
+                        match (op_expr.lhs.clone(), op_expr.rhs) {
+                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&[rhs, lhs, u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                self.bytecode.code.extend_from_slice(&rhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&lhs.to_bits().to_be_bytes());
+                                self.bytecode.code.extend_from_slice(&[u8::from(&op_expr.lhs), make_op(OpCode::OpPercent)]);
+                            },
+                            (_, _) => {
+                                println!("lhs and rhs should have the same Datatype!");
                             }
                         }
                     },

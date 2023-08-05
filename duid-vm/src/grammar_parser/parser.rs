@@ -235,6 +235,33 @@ fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBl
                                 Rule::Plus => {
                                     data.op = ArithOrLogExpr::Plus;
                                 },
+                                Rule::Minus => {
+                                    data.op = ArithOrLogExpr::Minus;
+                                },
+                                Rule::Star => {
+                                    data.op = ArithOrLogExpr::Star;
+                                },
+                                Rule::Slash => {
+                                    data.op = ArithOrLogExpr::Slash;
+                                },
+                                Rule::Percent => {
+                                    data.op = ArithOrLogExpr::Percent;
+                                },
+                                Rule::And => {
+                                    data.op = ArithOrLogExpr::And;
+                                },
+                                Rule::Or => {
+                                    data.op = ArithOrLogExpr::Or;
+                                },
+                                Rule::Caret => {
+                                    data.op = ArithOrLogExpr::Caret;
+                                },
+                                Rule::Shl => {
+                                    data.op = ArithOrLogExpr::Shl;
+                                },
+                                Rule::Shr => {
+                                    data.op = ArithOrLogExpr::Shr;
+                                },
                                 Rule::Identifier => {
                                     if data.lhs == DataValue::None {
                                         data.lhs = DataValue::Variable(Variable {

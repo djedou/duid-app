@@ -33,10 +33,9 @@ fn main() -> Result<()> {
                     }
                     else if #[cfg(feature = "vm")] {
                         let byte_code = Engine::from_source(&line);
-                        println!("byte code: {:?}", byte_code);
-                        let mut vm = DuidVm::new(byte_code);
+                        let mut vm = DuidVm::<512>::new();
+                        vm.push(&byte_code.code);
                         vm.run();
-                        //println!("{}", vm.pop_last());
                     }
                 }
             }
