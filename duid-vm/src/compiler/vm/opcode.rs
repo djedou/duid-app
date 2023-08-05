@@ -7,6 +7,10 @@ pub enum OpCode {
     OpStar,
     OpSlash,
     OpPercent,
+    OpBitAnd,
+    OpBitOr,
+    OpBitXor,
+    OpShl
 }
 // ANCHOR_END: vm_opcode
 
@@ -32,5 +36,9 @@ pub fn make_op(op: OpCode) -> u8 {
         OpCode::OpStar => 0x12,
         OpCode::OpSlash => 0x13,
         OpCode::OpPercent => 0x14,
+        OpCode::OpBitAnd => 0x15,
+        OpCode::OpBitOr => 0x16,
+        OpCode::OpBitXor => 0x17,
+        OpCode::OpShl => 0x18,
     }
 }

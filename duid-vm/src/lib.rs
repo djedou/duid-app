@@ -1,6 +1,7 @@
 pub mod ast;
 pub mod compiler;
 pub mod grammar_parser;
+pub mod utils;
 
 pub use crate::ast::{Ast};
 //pub use crate::compiler::interpreter::Interpreter;

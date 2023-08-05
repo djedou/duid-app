@@ -12,10 +12,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::Int8 => {
                 match &mut self.pop(2) {
                     Some(data) => {
-                        let rhs = i8::from_be_bytes(data[..1].try_into().unwrap());
-                        let lhs = i8::from_be_bytes(data[1..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::Int8(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, i8, data, 1, DataValue::Int8(0), +);
                     },
                     _ => {}
                 }
@@ -23,10 +20,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::Int16 => {
                 match &mut self.pop(4) {
                     Some(data) => {
-                        let rhs = i16::from_be_bytes(data[..2].try_into().unwrap());
-                        let lhs = i16::from_be_bytes(data[2..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::Int16(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, i16, data, 2, DataValue::Int16(0), +);
                     },
                     _ => {}
                 }
@@ -34,10 +28,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::Int32 => {
                 match &mut self.pop(8) {
                     Some(data) => {
-                        let rhs = i32::from_be_bytes(data[..4].try_into().unwrap());
-                        let lhs = i32::from_be_bytes(data[4..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::Int32(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, i32, data, 4, DataValue::Int32(0), +);
                     },
                     _ => {}
                 }
@@ -45,10 +36,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::Int64 => {
                 match &mut self.pop(16) {
                     Some(data) => {
-                        let rhs = i64::from_be_bytes(data[..8].try_into().unwrap());
-                        let lhs = i64::from_be_bytes(data[8..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::Int64(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, i64, data, 8, DataValue::Int64(0), +);
                     },
                     _ => {}
                 }
@@ -56,10 +44,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::Int128 => {
                 match &mut self.pop(32) {
                     Some(data) => {
-                        let rhs = i128::from_be_bytes(data[..16].try_into().unwrap());
-                        let lhs = i128::from_be_bytes(data[16..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::Int128(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, i128, data, 16, DataValue::Int128(0), +);
                     },
                     _ => {}
                 }
@@ -67,10 +52,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::UInt8 => {
                 match &mut self.pop(2) {
                     Some(data) => {
-                        let rhs = u8::from_be_bytes(data[..1].try_into().unwrap());
-                        let lhs = u8::from_be_bytes(data[1..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::UInt8(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, u8, data, 1, DataValue::UInt8(0), +);
                     },
                     _ => {}
                 }
@@ -78,10 +60,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::UInt16 => {
                 match &mut self.pop(4) {
                     Some(data) => {
-                        let rhs = u16::from_be_bytes(data[..2].try_into().unwrap());
-                        let lhs = u16::from_be_bytes(data[2..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::UInt16(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, u16, data, 2, DataValue::UInt16(0), +);
                     },
                     _ => {}
                 }
@@ -89,10 +68,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::UInt32 => {
                 match &mut self.pop(8) {
                     Some(data) => {
-                        let rhs = u32::from_be_bytes(data[..4].try_into().unwrap());
-                        let lhs = u32::from_be_bytes(data[4..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::UInt32(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, u32, data, 4, DataValue::UInt32(0), +);
                     },
                     _ => {}
                 }
@@ -100,10 +76,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::UInt64 => {
                 match &mut self.pop(16) {
                     Some(data) => {
-                        let rhs = u64::from_be_bytes(data[..8].try_into().unwrap());
-                        let lhs = u64::from_be_bytes(data[8..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::UInt64(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, u64, data, 8, DataValue::UInt64(0), +);
                     },
                     _ => {}
                 }
@@ -111,10 +84,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::UInt128 => {
                 match &mut self.pop(32) {
                     Some(data) => {
-                        let rhs = u128::from_be_bytes(data[..16].try_into().unwrap());
-                        let lhs = u128::from_be_bytes(data[16..].try_into().unwrap());
-                        self.push(&(lhs + rhs).to_be_bytes());
-                        self.push(&[u8::from(&DataValue::UInt128(0)), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLog!(self, u128, data, 16, DataValue::UInt128(0), +);
                     },
                     _ => {}
                 }
@@ -122,10 +92,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::Float32 => {
                 match &mut self.pop(8) {
                     Some(data) => {
-                        let rhs = f32::from_bits(u32::from_be_bytes(data[..4].try_into().unwrap()));
-                        let lhs = f32::from_bits(u32::from_be_bytes(data[4..].try_into().unwrap()));
-                        self.push(&(lhs + rhs).to_bits().to_be_bytes());
-                        self.push(&[u8::from(&DataValue::Float32(eq_float::F32(0.))), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLogFloat!(self, f32, u32, data, 4, DataValue::Float32(eq_float::F32(0.)), +);
                     },
                     _ => {}
                 }
@@ -133,10 +100,7 @@ impl<const N: usize> DuidVm<N> {
             DataType::Float64 => {
                 match &mut self.pop(16) {
                     Some(data) => {
-                        let rhs = f64::from_bits(u64::from_be_bytes(data[..8].try_into().unwrap()));
-                        let lhs = f64::from_bits(u64::from_be_bytes(data[8..].try_into().unwrap()));
-                        self.push(&(lhs + rhs).to_bits().to_be_bytes());
-                        self.push(&[u8::from(&DataValue::Float64(eq_float::F64(0.))), make_op(OpCode::OpReturn)]);
+                        crate::OpArithOrLogFloat!(self, f64, u64, data, 8, DataValue::Float64(eq_float::F64(0.)), +);
                     },
                     _ => {}
                 }
