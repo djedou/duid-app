@@ -5,12 +5,7 @@ use crate::compiler::vm::data::{DataType, DataValue};
 
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ArithOrLogExpr {
-    Plus,
-    Minus,
-    Star,
-    Slash,
-    Percent,
+pub enum LogExpr {
     And,
     Or,
     Caret,
@@ -18,28 +13,52 @@ pub enum ArithOrLogExpr {
     Shr,
 }
 
-impl From<&str> for ArithOrLogExpr {
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ArithExpr {
+    Plus,
+    Minus,
+    Star,
+    Slash,
+    Percent
+}
+
+impl From<&str> for LogExpr {
     fn from(value: &str) -> Self {
         match value {
-            "+" => ArithOrLogExpr::Plus,
-            "-" => ArithOrLogExpr::Minus,
-            "*" => ArithOrLogExpr::Star,
-            "/" => ArithOrLogExpr::Slash,
-            "%" => ArithOrLogExpr::Percent,
-            "&" => ArithOrLogExpr::And,
-            "|" => ArithOrLogExpr::Or,
-            "^" => ArithOrLogExpr::Caret,
-            "<<" => ArithOrLogExpr::Shl,
-            ">>" => ArithOrLogExpr::Shr,
+            "&" => LogExpr::And,
+            "|" => LogExpr::Or,
+            "^" => LogExpr::Caret,
+            "<<" => LogExpr::Shl,
+            ">>" => LogExpr::Shr,
+            o => panic!("Unknowed operator: {}", o)
+        }
+    }
+}
+
+impl From<&str> for ArithExpr {
+    fn from(value: &str) -> Self {
+        match value {
+            "+" => ArithExpr::Plus,
+            "-" => ArithExpr::Minus,
+            "*" => ArithExpr::Star,
+            "/" => ArithExpr::Slash,
+            "%" => ArithExpr::Percent,
             o => panic!("Unknowed operator: {}", o)
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BinaryOps {
+    None,
+    Arith(ArithExpr),
+    Log(LogExpr)
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BinaryExpr {
     pub lhs: DataValue,
-    pub op: ArithOrLogExpr,
+    pub op: BinaryOps,
     pub rhs: DataValue
 }
 
@@ -47,7 +66,7 @@ impl BinaryExpr {
     pub fn new() -> Self {
         BinaryExpr {
             lhs: DataValue::None,
-            op: ArithOrLogExpr::Plus,
+            op: BinaryOps::None,
             rhs: DataValue::None
         }
     }

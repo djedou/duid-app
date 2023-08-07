@@ -249,34 +249,34 @@ fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBl
                                     }
                                 },
                                 Rule::Plus => {
-                                    data.op = ArithOrLogExpr::Plus;
+                                    data.op = BinaryOps::Arith(ArithExpr::Plus);
                                 },
                                 Rule::Minus => {
-                                    data.op = ArithOrLogExpr::Minus;
+                                    data.op = BinaryOps::Arith(ArithExpr::Minus);
                                 },
                                 Rule::Star => {
-                                    data.op = ArithOrLogExpr::Star;
+                                    data.op = BinaryOps::Arith(ArithExpr::Star);
                                 },
                                 Rule::Slash => {
-                                    data.op = ArithOrLogExpr::Slash;
+                                    data.op = BinaryOps::Arith(ArithExpr::Slash);
                                 },
                                 Rule::Percent => {
-                                    data.op = ArithOrLogExpr::Percent;
+                                    data.op = BinaryOps::Arith(ArithExpr::Percent);
                                 },
                                 Rule::And => {
-                                    data.op = ArithOrLogExpr::And;
+                                    data.op =  BinaryOps::Log(LogExpr::And);
                                 },
                                 Rule::Or => {
-                                    data.op = ArithOrLogExpr::Or;
+                                    data.op = BinaryOps::Log(LogExpr::Or);
                                 },
                                 Rule::Caret => {
-                                    data.op = ArithOrLogExpr::Caret;
+                                    data.op = BinaryOps::Log(LogExpr::Caret);
                                 },
                                 Rule::Shl => {
-                                    data.op = ArithOrLogExpr::Shl;
+                                    data.op = BinaryOps::Log(LogExpr::Shl);
                                 },
                                 Rule::Shr => {
-                                    data.op = ArithOrLogExpr::Shr;
+                                    data.op = BinaryOps::Log(LogExpr::Shr);
                                 },
                                 Rule::Identifier => {
                                     if data.lhs == DataValue::None {
