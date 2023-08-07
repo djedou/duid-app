@@ -161,6 +161,22 @@ fn build_ast_from_item(pair: pest::iterators::Pair<Rule>) -> Vec<ModuleContent> 
                                 let data_type = DataType::from("Float64");
                                 ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
                             },
+                            "Byte" => {
+                                let data_type = DataType::from("Byte");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Bool" => {
+                                let data_type = DataType::from("Bool");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "String" => {
+                                let data_type = DataType::from("String");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
+                            "Chr" => {
+                                let data_type = DataType::from("Chr");
+                                ModuleContent::Item(Item::Struct(Struct::UnitStruct(data_type)))
+                            },
                             _ => ModuleContent::None
                         }
                     },

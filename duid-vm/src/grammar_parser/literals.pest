@@ -169,14 +169,14 @@ UnicodeHex = { HexDigit{1, 6} }
 Predefined = { "n" | "r" | "t" | "\\" | "0" | "\"" | "'" }
 Unicode = { "u" ~ "{" ~ UnicodeHex ~ "}" }
 Escape = { "\\" ~ (Predefined | Byte | Unicode) }
-CharLiteral = { "'" ~ (Escape | ANY) ~ "'" }
+Char = { "'" ~ (Escape | ANY) ~ "'" }
 StringContent = {(!("\\" | "\"") ~ ANY)+ }
 RawStringInterior = {(!("\"" ~ PEEK) ~ ANY )*}
 DoubleQuotedString = @{ "\"" ~ (StringContent | Escape)* ~ "\"" }
 RAW_STRING_LITERAL = @{ "r" ~ PUSH("#"*) ~ "\"" ~ RawStringInterior ~ "\"" ~ POP }
 BackquotedQuotedString  = @{ "`" ~ (!("`") ~ ANY)* ~ "`"}
 
-StringLiteral  = @{
+String  = @{
     RAW_STRING_LITERAL |
     BackquotedQuotedString |
     DoubleQuotedString 
@@ -191,8 +191,8 @@ Literals = _{
     | Int
     | Bool
     | Identifier
-    | StringLiteral
-    | CharLiteral
+    | String
+    | Char
 }
 
 Plus = { "+" } // Addition, Trait Bounds, Macro Kleene Matcher

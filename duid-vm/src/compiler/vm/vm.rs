@@ -5,46 +5,79 @@ use crate::compiler::vm::{
 
 #[derive(Debug)]
 pub struct DuidVm<const N: usize> {
-    code: Vec<u8>,
+    memory: Vec<u8>,
     stack: [u8; N],
     stack_top: usize,
-    pc: usize
+    instructions: Vec<u16>,
+    inst_size: usize,
+    ip: usize,
+    flag: u8
 }
 
 
 impl<const N: usize> DuidVm<N> {
     pub fn new() -> Self {
         DuidVm {
-            code: Vec::with_capacity(0),
+            memory: Vec::with_capacity(0),
             stack: [0u8; N],
             stack_top: 0,
-            pc: 0
+            instructions: Vec::with_capacity(0),
+            inst_size: 0,
+            ip: 0,
+            flag: 0x00
         }
     }
 
-    pub fn size(&self) -> usize {
-        self.stack.len()
+    
+    //############ Memory op start #####################
+    pub fn load_memory(&mut self, value: &[u8]) {
+        self.memory.extend_from_slice(value);
     }
 
-    pub fn load_code(&mut self, value: &[u8]) {
-        self.code.extend_from_slice(value);
+    pub fn pop_memory(&mut self, address: usize, size: usize) -> Option<&[u8]> {
+        if size == 1 {
+            let end = address + size;
+            let data = &self.memory[address..end];
+            Some(data)
+        }
+        else if size > 1 {
+            let end = address + size;
+            let data = &self.memory[address..=end];
+            Some(data)
+        }
+        else {
+            None
+        }
     }
 
-    pub fn pop_code(&mut self) -> Option<&[u8]> {
-        
-        /*match self.stack_top >= size {
+    pub fn update_memory(&mut self, address: usize, value: &[u8]) {
+        let end = address + value.len();
+        self.memory[address..end].iter_mut().zip(value.iter()).for_each(|(a, b)| {*a = *b;});
+    }
+    //############ Memory op end #####################
+
+    //############ Instruction op start #####################
+    pub fn load_instructions(&mut self, value: &[u16]) {
+        self.instructions.extend_from_slice(value);
+        self.inst_size = self.inst_size + value.len();
+    }
+
+    pub fn pop_instructions(&mut self, size: usize) -> Option<&[u16]> {
+        let end = self.ip + size;
+        match self.inst_size >= end {
             true => {
-                let start = self.stack_top - size;
-                let end = self.stack_top - 1;
-                let data = &self.stack[start..=end];
-                self.stack_top = start;
+                let start = self.ip;
+                let data = &self.instructions[start..end];
+                self.ip = end;
                 Some(data)
             },
             false => None
-        }*/
-        None
+        }
     }
+    //############ Instruction op end #####################
 
+
+    //############ Stack op start #####################
     pub fn push(&mut self, value: &[u8]) {
         let end = self.stack_top + value.len();
         self.stack[self.stack_top..end].iter_mut().zip(value.iter()).for_each(|(a, b)| {*a = *b;});
@@ -63,46 +96,26 @@ impl<const N: usize> DuidVm<N> {
             false => None
         }
     }
+    //############ Stack op end #####################
 
     pub fn run(&mut self) {
-        // Get OpCode and DataType Code
-        while let Some(instr) = self.pop(2) {
+        // Get Instructions
+        while let Some(instr) = self.pop_instructions(1) {
             match instr {
-                [type_code, 0x05] => {
-                    let value = *type_code;
-                    let _ = self.op_return(DataType::from([value].as_slice()));
+                [0x001B] => {
+                    self.op_push();
                 },
-                [type_code, 0x10] => {
-                    let value = *type_code;
-                    let _ = self.op_add(DataType::from([value].as_slice()));
+                /*[0x00DD] => {
+                    self.op_add();
+                },*/
+                [0x00ED] => {
+                    self.op_minus();
                 },
-                [type_code, 0x11] => {
-                    let value = *type_code;
-                    let _ = self.op_minus(DataType::from([value].as_slice()));
+                [0xFF0B] => {
+                    self.op_return();
                 },
-                [type_code, 0x12] => {
-                    let value = *type_code;
-                    let _ = self.op_star(DataType::from([value].as_slice()));
-                },
-                [type_code, 0x13] => {
-                    let value = *type_code;
-                    let _ = self.op_slash(DataType::from([value].as_slice()));
-                },
-                [type_code, 0x14] => {
-                    let value = *type_code;
-                    let _ = self.op_percent(DataType::from([value].as_slice()));
-                },
-                [type_code, 0x15] => {
-                    let value = *type_code;
-                    let _ = self.op_bit_and(DataType::from([value].as_slice()));
-                },
-                [type_code, 0x16] => {
-                    let value = *type_code;
-                    let _ = self.op_bit_or(DataType::from([value].as_slice()));
-                },
-                [type_code, 0x17] => {
-                    let value = *type_code;
-                    let _ = self.op_bit_xor(DataType::from([value].as_slice()));
+                [0xFF1B] => {
+                    self.op_output();
                 },
                 _ => {}
             }

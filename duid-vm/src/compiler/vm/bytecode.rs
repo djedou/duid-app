@@ -8,15 +8,21 @@ pub type ModuleKey = String;
 #[derive(Debug, Clone, PartialEq, Eq)]
 // ANCHOR: bytecode
 pub struct Bytecode {
-    pub code: Vec<u8>
+    pub code: Vec<u8>,
+    pub instructions: Vec<u16>
 }
 // ANCHOR_END: bytecode
 
 impl Bytecode {
     fn new() -> Self {
         Self {
-            code: Vec::new()
+            code: Vec::new(),
+            instructions: Vec::new()
         }
+    }
+
+    pub fn get_size(&self) -> u32 {
+        self.code.len() as u32
     }
 }
 
@@ -91,345 +97,66 @@ impl Interpreter {
             },
             ExprWithoutBlck::OpExpr(OpExpr::ArithOrLogExpr(op_expr)) => {
                 match op_expr.op {
-                    ArithOrLogExpr::Plus => {
-                        match (&op_expr.lhs, op_expr.rhs) {
-                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
-                            },
-                            (_, _) => {
-                                println!("lhs and rhs should have the same Datatype!");
-                            }
-                        }
-                    },
                     ArithOrLogExpr::Minus => {
                         match (&op_expr.lhs, op_expr.rhs) {
                             (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                
+                                let rhs_address = self.bytecode.get_size();
+                                self.bytecode.code.extend_from_slice(&rhs.to_be_bytes());
+                                let rhs_ints = crate::utils::build_instruction_op_add_datatype(OpCode::PUSH, rhs_address, u16::from(&op_expr.lhs));
+                                self.bytecode.instructions.extend_from_slice(&rhs_ints);
+                                
+                                let lhs_address = self.bytecode.get_size();
+                                self.bytecode.code.extend_from_slice(&lhs.to_be_bytes());
+                                let lhs_ints = crate::utils::build_instruction_op_add_datatype(OpCode::PUSH, lhs_address, u16::from(&op_expr.lhs));
+                                self.bytecode.instructions.extend_from_slice(&lhs_ints);
+                                
+                                let op_add = crate::utils::build_instruction_op_datatype(OpCode::OpMinus, u16::from(&op_expr.lhs));
+                                self.bytecode.instructions.extend_from_slice(&op_add);
+                                
+                                // ### return
+                                let rt_address = self.bytecode.get_size();
+                                self.bytecode.code.extend_from_slice(&[0u8; 1]);
+                                let rt_ints = crate::utils::build_instruction_op_add_datatype(OpCode::OpReturn, rt_address, u16::from(&op_expr.lhs));
+                                self.bytecode.instructions.extend_from_slice(&rt_ints);
+
+                                // ### output
+                                let rt_ints = crate::utils::build_instruction_op_add_datatype(OpCode::OpOutput, rt_address, u16::from(&op_expr.lhs));
+                                self.bytecode.instructions.extend_from_slice(&rt_ints);
                             },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                            /*(DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
+                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
                             },
                             (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpMinus);
-                            },
-                            (_, _) => {
-                                println!("lhs and rhs should have the same Datatype!");
-                            }
-                        }
-                    },
-                    ArithOrLogExpr::Star => {
-                        match (&op_expr.lhs, op_expr.rhs) {
-                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpStar);
-                            },
-                            (_, _) => {
-                                println!("lhs and rhs should have the same Datatype!");
-                            }
-                        }
-                    },
-                    ArithOrLogExpr::Slash => {
-                        match (&op_expr.lhs, op_expr.rhs) {
-                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpSlash);
-                            },
-                            (_, _) => {
-                                println!("lhs and rhs should have the same Datatype!");
-                            }
-                        }
-                    },
-                    ArithOrLogExpr::Percent => {
-                        match (&op_expr.lhs, op_expr.rhs) {
-                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpPercent);
-                            },
-                            (_, _) => {
-                                println!("lhs and rhs should have the same Datatype!");
-                            }
-                        }
-                    },
-                    ArithOrLogExpr::And => {
-                        match (&op_expr.lhs, op_expr.rhs) {
-                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitAnd);
-                            },
-                            (DataValue::Float32(_), DataValue::Float32(_)) => {
-                                println!("bitAnd operator is not implemented for Float32!");
-                            },
-                            (DataValue::Float64(_), DataValue::Float64(_)) => {
-                                println!("bitAnd operator is not implemented for Float64!");
-                            },
-                            (_, _) => {
-                                println!("lhs and rhs should have the same Datatype!");
-                            }
-                        }
-                    },
-                    ArithOrLogExpr::Or => {
-                        match (&op_expr.lhs, op_expr.rhs) {
-                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitOr);
-                            },
-                            (DataValue::Float32(_), DataValue::Float32(_)) => {
-                                println!("bitAnd operator is not implemented for Float32!");
-                            },
-                            (DataValue::Float64(_), DataValue::Float64(_)) => {
-                                println!("bitAnd operator is not implemented for Float64!");
-                            },
-                            (_, _) => {
-                                println!("lhs and rhs should have the same Datatype!");
-                            }
-                        }
-                    },
-                    ArithOrLogExpr::Caret => {
-                        match (&op_expr.lhs, op_expr.rhs) {
-                            (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
-                                crate::ByteCodeFromDataValue!(self, rhs.to_be_bytes(), lhs.to_be_bytes(), op_expr.lhs, OpCode::OpBitXor);
-                            },
-                            (DataValue::Float32(_), DataValue::Float32(_)) => {
-                                println!("bitAnd operator is not implemented for Float32!");
-                            },
-                            (DataValue::Float64(_), DataValue::Float64(_)) => {
-                                println!("bitAnd operator is not implemented for Float64!");
-                            },
+                                crate::ByteCodeFromDataValue!(self, rhs.to_bits().to_be_bytes(), lhs.to_bits().to_be_bytes(), op_expr.lhs, OpCode::OpAdd);
+                            },*/
                             (_, _) => {
                                 println!("lhs and rhs should have the same Datatype!");
                             }
