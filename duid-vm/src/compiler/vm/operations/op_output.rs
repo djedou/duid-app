@@ -1,5 +1,5 @@
 use crate::{
-    utils::{get_address},
+    utils::{get_address, boolean_from_bits},
     compiler::vm::{
         data::*,
         vm::DuidVm
@@ -69,10 +69,12 @@ impl<const N: usize> DuidVm<N> {
                                 println!("{:?}", res);
                             },
                             DataType::Byte => {
-
+                                let res = u8::from_be_bytes(m_data.try_into().unwrap());
+                                println!("{:?}", res);
                             },
                             DataType::Bool => {
-
+                                let res = boolean_from_bits(u8::from_be_bytes(m_data.try_into().unwrap()));
+                                println!("{:?}", res);
                             },
                             DataType::String => {
 

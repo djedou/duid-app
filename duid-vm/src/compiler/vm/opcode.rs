@@ -73,6 +73,7 @@ pub enum OpCode {
     OpBitOr,
     OpBitXor,
     OpShl,
+    OpShr,
     //### Others ###
     OpReturn,
     OpOutput
@@ -105,7 +106,7 @@ pub fn make_op(op: OpCode) -> u16 {
         OpCode::OpBitOr => 0x013D,
         OpCode::OpBitXor => 0x014D,
         OpCode::OpShl => 0x015D,
-
+        OpCode::OpShr => 0x016D,
         // System
         OpCode::OpReturn => 0xFF0B,
         OpCode::OpOutput => 0xFF1B,

@@ -248,6 +248,14 @@ fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBl
                                         data.rhs = DataValue::Float64(eq_float::F64(i.as_str().parse::<f64>().unwrap()));
                                     }
                                 },
+                                Rule::Bool => {
+                                    if data.lhs == DataValue::None {
+                                        data.lhs = DataValue::Bool(i.as_str().parse::<bool>().unwrap());
+                                    }
+                                    else {
+                                        data.rhs = DataValue::Bool(i.as_str().parse::<bool>().unwrap());
+                                    }
+                                }
                                 Rule::Plus => {
                                     data.op = BinaryOps::Arith(ArithExpr::Plus);
                                 },
@@ -437,7 +445,7 @@ fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBl
                                         },
                                         _ => {}
                                     }
-                                }
+                                },
                                 r => {
                                     panic!("Rule {:?} is not yet implemented!!", r);
                                 }

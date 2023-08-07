@@ -2,7 +2,7 @@ use crate::compiler::vm::opcode::*;
 
 
 #[macro_export]
-macro_rules! OpArithIntoInstructions {
+macro_rules! OpBinaryInstructions {
     ($stack:expr, $data_type:expr, $lhs:expr, $rhs:expr, $op:expr, $size:expr) => {
         let rhs_address = $stack.bytecode.get_size();
         $stack.bytecode.code.extend_from_slice(&$rhs);
@@ -29,7 +29,7 @@ macro_rules! OpArithIntoInstructions {
 }
 
 #[macro_export]
-macro_rules! OpArith {
+macro_rules! OpBinary {
     ($stack:expr, $data_type:ty, $size:expr, $op:tt) => {
         let index = $size * 2;
         match &mut $stack.pop(index) {
@@ -44,7 +44,22 @@ macro_rules! OpArith {
 }
 
 #[macro_export]
-macro_rules! OpArithFloat {
+macro_rules! OpBinaryBool {
+    ($stack:expr, $size:expr, $op:tt) => {
+        let index = $size * 2;
+        match &mut $stack.pop(index) {
+            Some(value) => {
+                let rhs = $crate::utils::boolean_from_bits(u8::from_be_bytes(value[..$size].try_into().unwrap()));
+                let lhs = $crate::utils::boolean_from_bits(u8::from_be_bytes(value[$size..].try_into().unwrap()));
+                $stack.push(&$crate::utils::boolean_into_bits(&(lhs $op rhs)).to_be_bytes());
+            },
+            _ => {}
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! OpBinaryFloat {
     ($stack:expr, $data_type:ty, $data_type_int:ty, $size:expr, $op:tt) => {
         let index = $size * 2;
         match &mut $stack.pop(index) {
@@ -84,4 +99,19 @@ fn _make_three_byte_op(code: u8, data: u16) -> Vec<u8> {
     let mut output = vec![code];
     output.extend(&_convert_u16_to_two_u8s(data));
     output
+}
+
+
+pub fn boolean_into_bits(value: &bool) -> u8 {
+    match value {
+        true => 0x01,
+        false => 0x00
+    }
+}
+
+pub fn boolean_from_bits(value: u8) -> bool {
+    match value {
+        0x01 => true,
+        _ => false
+    }
 }

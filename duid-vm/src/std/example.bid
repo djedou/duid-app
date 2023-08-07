@@ -6,3 +6,11 @@
 2 * 50;
 50 / 50;
 33 % 5;
+true & true;
+true & false;
+false & false;
+false ^ false;
+false | true;
+true | false;
+12 >> 2
+12 << 2

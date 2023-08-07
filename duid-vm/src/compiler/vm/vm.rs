@@ -116,6 +116,21 @@ impl<const N: usize> DuidVm<N> {
                 [0x011D] => {
                     self.op_percent();
                 },
+                [0x012D] => {
+                    self.op_bit_and();
+                },
+                [0x013D] => {
+                    self.op_bit_or();
+                },
+                [0x014D] => {
+                    self.op_bit_xor();
+                },
+                [0x015D] => {
+                    self.op_shl();
+                },
+                [0x016D] => {
+                    self.op_shr();
+                },
                 [0xFF0B] => {
                     self.op_return();
                 },
