@@ -1,7 +1,3 @@
-use crate::compiler::vm::{
-    opcode::*,
-    data::*
-};
 
 #[derive(Debug)]
 pub struct DuidVm<const N: usize> {
@@ -42,7 +38,7 @@ impl<const N: usize> DuidVm<N> {
         }
         else if size > 1 {
             let end = address + size;
-            let data = &self.memory[address..=end];
+            let data = &self.memory[address..end];
             Some(data)
         }
         else {
@@ -105,11 +101,20 @@ impl<const N: usize> DuidVm<N> {
                 [0x001B] => {
                     self.op_push();
                 },
-                /*[0x00DD] => {
+                [0x00DD] => {
                     self.op_add();
-                },*/
+                },
                 [0x00ED] => {
                     self.op_minus();
+                },
+                [0x00FD] => {
+                    self.op_star();
+                },
+                [0x010D] => {
+                    self.op_slash();
+                },
+                [0x011D] => {
+                    self.op_percent();
                 },
                 [0xFF0B] => {
                     self.op_return();

@@ -1,7 +1,6 @@
 use crate::{
     utils::{get_address},
     compiler::vm::{
-        opcode::*,
         data::*,
         vm::DuidVm
     }
@@ -23,51 +22,51 @@ impl<const N: usize> DuidVm<N> {
                             },
                             DataType::Int8 => {
                                 let res = i8::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::Int16 => {
                                 let res = i16::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::Int32 => {
                                 let res = i32::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::Int64 => {
                                 let res = i64::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::Int128 => {
                                 let res = i128::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::UInt8 => {
                                 let res = u8::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::UInt16 => {
                                 let res = u16::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::UInt32 => {
                                 let res = u32::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::UInt64 => {
                                 let res = u64::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::UInt128 => {
                                 let res = u128::from_be_bytes(m_data.try_into().unwrap());
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::Float32 => {
                                 let res = f32::from_bits(u32::from_be_bytes(m_data.try_into().unwrap()));
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::Float64 => {
                                 let res = f64::from_bits(u64::from_be_bytes(m_data.try_into().unwrap()));
-                                println!("result: {:?}", res);
+                                println!("{:?}", res);
                             },
                             DataType::Byte => {
 

@@ -1,7 +1,6 @@
 use crate::{
     utils::get_address,
     compiler::vm::{
-        opcode::*,
         data::*,
         vm::DuidVm
     }

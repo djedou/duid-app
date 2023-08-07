@@ -34,7 +34,8 @@ fn main() -> Result<()> {
                     else if #[cfg(feature = "vm")] {
                         let byte_code = Engine::from_source(&line);
                         let mut vm = DuidVm::<512>::new();
-                        vm.push(&byte_code.code);
+                        vm.load_memory(&byte_code.code);
+                        vm.load_instructions(&byte_code.instructions);
                         vm.run();
                     }
                 }
