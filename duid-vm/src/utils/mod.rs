@@ -44,21 +44,6 @@ macro_rules! OpBinary {
 }
 
 #[macro_export]
-macro_rules! OpBinaryBool {
-    ($stack:expr, $size:expr, $op:tt) => {
-        let index = $size * 2;
-        match &mut $stack.pop(index) {
-            Some(value) => {
-                let rhs = $crate::utils::boolean_from_bits(u8::from_be_bytes(value[..$size].try_into().unwrap()));
-                let lhs = $crate::utils::boolean_from_bits(u8::from_be_bytes(value[$size..].try_into().unwrap()));
-                $stack.push(&$crate::utils::boolean_into_bits(&(lhs $op rhs)).to_be_bytes());
-            },
-            _ => {}
-        }
-    };
-}
-
-#[macro_export]
 macro_rules! OpBinaryFloat {
     ($stack:expr, $data_type:ty, $data_type_int:ty, $size:expr, $op:tt) => {
         let index = $size * 2;
@@ -104,14 +89,14 @@ fn _make_three_byte_op(code: u8, data: u16) -> Vec<u8> {
 
 pub fn boolean_into_bits(value: &bool) -> u8 {
     match value {
-        true => 0x01,
+        true => 0xFF,
         false => 0x00
     }
 }
 
 pub fn boolean_from_bits(value: u8) -> bool {
     match value {
-        0x01 => true,
+        0xFF => true,
         _ => false
     }
 }

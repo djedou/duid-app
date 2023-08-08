@@ -421,7 +421,7 @@ impl Interpreter {
                                         crate::OpBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpBitOr, 1);
                                     },
                                     (DataValue::Bool(lhs), DataValue::Bool(rhs)) => {
-                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpBitAnd, 1);
+                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpBitOr, 1);
                                     },
                                     (DataValue::String(_), DataValue::String(_)) => {},
                                     (DataValue::Chr(_), DataValue::Chr(_)) => {},
@@ -469,7 +469,7 @@ impl Interpreter {
                                         crate::OpBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpBitXor, 1);
                                     },
                                     (DataValue::Bool(lhs), DataValue::Bool(rhs)) => {
-                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpBitAnd, 1);
+                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpBitXor, 1);
                                     },
                                     (DataValue::String(_), DataValue::String(_)) => {},
                                     (DataValue::Chr(_), DataValue::Chr(_)) => {},
@@ -517,7 +517,7 @@ impl Interpreter {
                                         crate::OpBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpShl, 1);
                                     },
                                     (DataValue::Bool(lhs), DataValue::Bool(rhs)) => {
-                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpBitAnd, 1);
+                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpShl, 1);
                                     },
                                     (DataValue::String(_), DataValue::String(_)) => {},
                                     (DataValue::Chr(_), DataValue::Chr(_)) => {},
@@ -565,7 +565,7 @@ impl Interpreter {
                                         crate::OpBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpShr, 1);
                                     },
                                     (DataValue::Bool(lhs), DataValue::Bool(rhs)) => {
-                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpBitAnd, 1);
+                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpShr, 1);
                                     },
                                     (DataValue::String(_), DataValue::String(_)) => {},
                                     (DataValue::Chr(_), DataValue::Chr(_)) => {},

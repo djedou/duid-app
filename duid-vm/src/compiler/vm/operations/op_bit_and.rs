@@ -51,7 +51,7 @@ impl<const N: usize> DuidVm<N> {
                         crate::OpBinary!(self, u8, size, &);
                     },
                     DataType::Bool => {
-                        crate::OpBinaryBool!(self, size, &);
+                        crate::OpBinary!(self, u8, size, &);
                     },
                     DataType::String => {},
                     DataType::Chr => {},
