@@ -1,13 +1,11 @@
 pub mod ast;
 pub mod compiler;
+pub mod vm;
 pub mod grammar_parser;
 pub mod utils;
 
 pub use crate::ast::{Ast};
-//pub use crate::compiler::interpreter::Interpreter;
-pub use crate::compiler::vm::{self, vm::DuidVm};
-
-pub type Result<T> = anyhow::Result<T>;
+pub use crate::vm::vm::DuidVm;
 
 
 use duid_core::{

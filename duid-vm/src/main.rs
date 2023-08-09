@@ -1,7 +1,7 @@
 use duid_vm::Compile;
-use duid_vm::compiler::vm::{
-    bytecode::Interpreter as Engine,
-    vm::DuidVm
+use duid_vm::{
+    compiler::bytecode::Interpreter as Engine,
+    DuidVm
 };
 
 fn main() {

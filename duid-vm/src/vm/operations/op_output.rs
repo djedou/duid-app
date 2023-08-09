@@ -1,6 +1,6 @@
 use crate::{
     utils::{get_address, boolean_from_bits},
-    compiler::vm::{
+    vm::{
         data::*,
         vm::DuidVm
     }

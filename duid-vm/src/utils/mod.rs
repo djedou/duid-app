@@ -1,4 +1,4 @@
-use crate::compiler::vm::opcode::*;
+use crate::vm::opcode::*;
 
 
 #[macro_export]
@@ -6,12 +6,12 @@ macro_rules! OpBinaryInstructions {
     ($stack:expr, $data_type:expr, $lhs:expr, $rhs:expr, $op:expr, $size:expr) => {
         let rhs_address = $stack.bytecode.get_size();
         $stack.bytecode.code.extend_from_slice(&$rhs);
-        let rhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::PUSH, rhs_address, u16::from(&$data_type));
+        let rhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::PUSH, rhs_address, u16::from(&$data_type));
         $stack.bytecode.instructions.extend_from_slice(&rhs_ints);
         
         let lhs_address = $stack.bytecode.get_size();
         $stack.bytecode.code.extend_from_slice(&$lhs);
-        let lhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::PUSH, lhs_address, u16::from(&$data_type));
+        let lhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::PUSH, lhs_address, u16::from(&$data_type));
         $stack.bytecode.instructions.extend_from_slice(&lhs_ints);
         
         let op_add = $crate::utils::build_instruction_op_datatype($op, u16::from(&$data_type));
@@ -19,11 +19,11 @@ macro_rules! OpBinaryInstructions {
 
         let rt_address = $stack.bytecode.get_size();
         $stack.bytecode.code.extend_from_slice(&[0u8; $size]);
-        let rt_ints = $crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::OpReturn, rt_address, u16::from(&$data_type));
+        let rt_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::OpReturn, rt_address, u16::from(&$data_type));
         $stack.bytecode.instructions.extend_from_slice(&rt_ints);
 
         // To be remove: Just here for test purpose!
-        let rt_ints = crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::OpOutput, rt_address, u16::from(&$data_type));
+        let rt_ints = crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::OpOutput, rt_address, u16::from(&$data_type));
         $stack.bytecode.instructions.extend_from_slice(&rt_ints);
     };
 }
@@ -64,7 +64,7 @@ macro_rules! OpUnaryInstructions {
     ($stack:expr, $data_type:expr, $rhs:expr, $op:expr, $size:expr) => {
         let rhs_address = $stack.bytecode.get_size();
         $stack.bytecode.code.extend_from_slice(&$rhs);
-        let rhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::PUSH, rhs_address, u16::from(&$data_type));
+        let rhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::PUSH, rhs_address, u16::from(&$data_type));
         $stack.bytecode.instructions.extend_from_slice(&rhs_ints);
 
         let op_add = $crate::utils::build_instruction_op_datatype($op, u16::from(&$data_type));
@@ -72,11 +72,11 @@ macro_rules! OpUnaryInstructions {
 
         let rt_address = $stack.bytecode.get_size();
         $stack.bytecode.code.extend_from_slice(&[0u8; $size]);
-        let rt_ints = $crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::OpReturn, rt_address, u16::from(&$data_type));
+        let rt_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::OpReturn, rt_address, u16::from(&$data_type));
         $stack.bytecode.instructions.extend_from_slice(&rt_ints);
 
         // To be remove: Just here for test purpose!
-        let rt_ints = crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::OpOutput, rt_address, u16::from(&$data_type));
+        let rt_ints = crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::OpOutput, rt_address, u16::from(&$data_type));
         $stack.bytecode.instructions.extend_from_slice(&rt_ints);
     };
 }

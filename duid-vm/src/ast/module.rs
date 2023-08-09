@@ -1,6 +1,6 @@
 use std::fmt;
 use crate::ast::{Visibility};
-use crate::compiler::vm::data::{DataType, DataValue};
+use crate::vm::data::{DataType, DataValue};
 
 
 
@@ -111,7 +111,7 @@ pub enum OpExpr {
     ErrorPropagationExpression,
     NegationExpr(UnaryExpr), // done
     ArithOrLogExpr(BinaryExpr), // done
-    ComparisonExpression,
+    ComparisonExpression, // doing
     LazyBooleanExpression,
     TypeCastExpression,
     AssignmentExpression,

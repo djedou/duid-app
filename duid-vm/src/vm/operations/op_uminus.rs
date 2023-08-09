@@ -1,8 +1,6 @@
-use crate::{
-    compiler::vm::{
-        data::*,
-        vm::DuidVm
-    }
+use crate::vm::{
+    data::*,
+    vm::DuidVm
 };
 
 

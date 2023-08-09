@@ -1,6 +1,6 @@
 use crate::{
     utils::{get_address},
-    compiler::vm::{
+    vm::{
         data::*,
         vm::DuidVm
     }

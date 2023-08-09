@@ -1,7 +1,7 @@
 #![allow(clippy::upper_case_acronyms)]
 
 use pest::{self, Parser};
-use crate::compiler::vm::data::{DataType, DataValue, Variable};
+use crate::vm::data::{DataType, DataValue, Variable};
 use crate::ast::{*};
 
 // ANCHOR: parser

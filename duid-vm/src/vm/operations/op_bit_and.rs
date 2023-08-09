@@ -1,13 +1,11 @@
-use crate::{
-    compiler::vm::{
-        data::*,
-        vm::DuidVm
-    }
+use crate::vm::{
+    data::*,
+    vm::DuidVm
 };
 
 
 impl<const N: usize> DuidVm<N> {
-    pub fn op_minus(&mut self) {
+    pub fn op_bit_and(&mut self) {
         match self.pop_instructions(1) {
             Some(data) => {
                 let data_type = DataType::from([data[0]].as_slice());
@@ -16,43 +14,43 @@ impl<const N: usize> DuidVm<N> {
                 match data_type {
                     DataType::None => {},
                     DataType::Int8 => {
-                        crate::OpBinary!(self, i8, size, -);
+                        crate::OpBinary!(self, i8, size, &);
                     },
                     DataType::Int16 => {
-                        crate::OpBinary!(self, i16, size, -);
+                        crate::OpBinary!(self, i16, size, &);
                     },
                     DataType::Int32 => {
-                        crate::OpBinary!(self, i32, size, -);
+                        crate::OpBinary!(self, i32, size, &);
                     },
                     DataType::Int64 => {
-                        crate::OpBinary!(self, i64, size, -);
+                        crate::OpBinary!(self, i64, size, &);
                     },
                     DataType::Int128 => {
-                        crate::OpBinary!(self, i128, size, -);
+                        crate::OpBinary!(self, i128, size, &);
                     },
                     DataType::UInt8 => {
-                        crate::OpBinary!(self, u8, size, -);
+                        crate::OpBinary!(self, u8, size, &);
                     },
                     DataType::UInt16 => {
-                        crate::OpBinary!(self, u16, size, -);
+                        crate::OpBinary!(self, u16, size, &);
                     },
                     DataType::UInt32 => {
-                        crate::OpBinary!(self, u32, size, -);
+                        crate::OpBinary!(self, u32, size, &);
                     },
                     DataType::UInt64 => {
-                        crate::OpBinary!(self, u64, size, -);
+                        crate::OpBinary!(self, u64, size, &);
                     },
                     DataType::UInt128 => {
-                        crate::OpBinary!(self, u128, size, -);
+                        crate::OpBinary!(self, u128, size, &);
                     },
-                    DataType::Float32 => {
-                        crate::OpBinaryFloat!(self, f32, u32, size, -);
+                    DataType::Float32 => {},
+                    DataType::Float64 => {},
+                    DataType::Byte => {
+                        crate::OpBinary!(self, u8, size, &);
                     },
-                    DataType::Float64 => {
-                        crate::OpBinaryFloat!(self, f64, u64, size, -);
+                    DataType::Bool => {
+                        crate::OpBinary!(self, u8, size, &);
                     },
-                    DataType::Byte => {},
-                    DataType::Bool => {},
                     DataType::String => {},
                     DataType::Chr => {},
                     DataType::Variable => {}

@@ -1,17 +1,14 @@
-use crate::compiler::vm::{OpCode};
+use crate::vm::opcode::OpCode;
 use crate::{Compile, Ast};
 use crate::ast::*;
 use crate::vm::data::DataValue;
 use crate::utils::{boolean_into_bits};
-pub type ModuleKey = String;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-// ANCHOR: bytecode
 pub struct Bytecode {
     pub code: Vec<u8>,
     pub instructions: Vec<u16>
 }
-// ANCHOR_END: bytecode
 
 impl Bytecode {
     fn new() -> Self {
@@ -670,7 +667,7 @@ impl Interpreter {
                                         crate::OpBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpShr, 1);
                                     },
                                     (DataValue::Bool(lhs), DataValue::Bool(rhs)) => {
-                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpShr, 1);
+                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(&lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpShr, 1);
                                     },
                                     (DataValue::String(_), DataValue::String(_)) => {},
                                     (DataValue::Chr(_), DataValue::Chr(_)) => {},
