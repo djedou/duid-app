@@ -131,6 +131,12 @@ impl<const N: usize> DuidVm<N> {
                 [0x016D] => {
                     self.op_shr();
                 },
+                [0x017D] => {
+                    self.op_uminus();
+                },
+                [0x018D] => {
+                    self.op_not();
+                },
                 [0xFF0B] => {
                     self.op_return();
                 },

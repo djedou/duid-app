@@ -343,90 +343,233 @@ fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBl
                                         },
                                         DataType::Int16 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::Int16(value.parse::<i16>().unwrap());
+                                                data.lhs = match value.parse::<i16>() {
+                                                                Ok(v) => DataValue::Int16(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::Int16
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::Int16(value.parse::<i16>().unwrap());
+                                                data.rhs = match value.parse::<i16>() {
+                                                    Ok(v) => DataValue::Int16(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::Int16
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::Int32 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::Int32(value.parse::<i32>().unwrap());
+                                                data.lhs = match value.parse::<i32>() {
+                                                                Ok(v) => DataValue::Int32(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::Int32
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::Int32(value.parse::<i32>().unwrap());
+                                                data.rhs = match value.parse::<i32>() {
+                                                    Ok(v) => DataValue::Int32(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::Int32
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::Int64 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::Int64(value.parse::<i64>().unwrap());
+                                                data.lhs = match value.parse::<i64>() {
+                                                                Ok(v) => DataValue::Int64(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::Int64
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::Int64(value.parse::<i64>().unwrap());
+                                                data.rhs = match value.parse::<i64>() {
+                                                    Ok(v) => DataValue::Int64(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::Int64
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::Int128 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::Int128(value.parse::<i128>().unwrap());
+                                                data.lhs = match value.parse::<i128>() {
+                                                                Ok(v) => DataValue::Int128(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::Int128
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::Int128(value.parse::<i128>().unwrap());
+                                                data.rhs = match value.parse::<i128>() {
+                                                    Ok(v) => DataValue::Int128(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::Int128
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::UInt8 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::UInt8(value.parse::<u8>().unwrap());
+                                                data.lhs = match value.parse::<u8>() {
+                                                                Ok(v) => DataValue::UInt8(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::UInt8
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::UInt8(value.parse::<u8>().unwrap());
+                                                data.rhs = match value.parse::<u8>() {
+                                                    Ok(v) => DataValue::UInt8(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::UInt8
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::UInt16 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::UInt16(value.parse::<u16>().unwrap());
+                                                data.lhs = match value.parse::<u16>() {
+                                                                Ok(v) => DataValue::UInt16(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::UInt16
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::UInt16(value.parse::<u16>().unwrap());
+                                                data.rhs = match value.parse::<u16>() {
+                                                    Ok(v) => DataValue::UInt16(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::UInt16
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::UInt32 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::UInt32(value.parse::<u32>().unwrap());
+                                                data.lhs = match value.parse::<u32>() {
+                                                                Ok(v) => DataValue::UInt32(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::UInt32
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::UInt32(value.parse::<u32>().unwrap());
+                                                data.rhs = match value.parse::<u32>() {
+                                                    Ok(v) => DataValue::UInt32(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::UInt32
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::UInt64 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::UInt64(value.parse::<u64>().unwrap());
+                                                data.lhs = match value.parse::<u64>() {
+                                                                Ok(v) => DataValue::UInt64(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::UInt64
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::UInt64(value.parse::<u64>().unwrap());
+                                                data.rhs = match value.parse::<u64>() {
+                                                    Ok(v) => DataValue::UInt64(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::UInt64
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::UInt128 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::UInt128(value.parse::<u128>().unwrap());
+                                                data.lhs = match value.parse::<u128>() {
+                                                                Ok(v) => DataValue::UInt128(v),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::UInt128
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::UInt128(value.parse::<u128>().unwrap());
+                                                data.rhs = match value.parse::<u128>() {
+                                                    Ok(v) => DataValue::UInt128(v),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::UInt128
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::Float32 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::Float32(eq_float::F32(value.parse::<f32>().unwrap()));
+                                                data.lhs = match value.parse::<f32>() {
+                                                                Ok(v) => DataValue::Float32(eq_float::F32(v)),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::Float32
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::Float32(eq_float::F32(value.parse::<f32>().unwrap()));
+                                                data.rhs = match value.parse::<f32>() {
+                                                    Ok(v) => DataValue::Float32(eq_float::F32(v)),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::Float32
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::Float64 => {
                                             if data.lhs == DataValue::None {
-                                                data.lhs = DataValue::Float64(eq_float::F64(value.parse::<f64>().unwrap()));
+                                                data.lhs = match value.parse::<f64>() {
+                                                                Ok(v) => DataValue::Float64(eq_float::F64(v)),
+                                                                Err(_) => DataValue::Variable(Variable {
+                                                                    value: value.to_string(),
+                                                                    data_type: DataType::Float64
+                                                                })
+                                                            };
                                             }
                                             else {
-                                                data.rhs = DataValue::Float64(eq_float::F64(value.parse::<f64>().unwrap()));
+                                                data.rhs = match value.parse::<f64>() {
+                                                    Ok(v) => DataValue::Float64(eq_float::F64(v)),
+                                                    Err(_) => DataValue::Variable(Variable {
+                                                        value: value.to_string(),
+                                                        data_type: DataType::Float64
+                                                    })
+                                                };
+                                                
                                             }
                                         },
                                         DataType::Variable => {
@@ -454,6 +597,155 @@ fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBl
 
                         OpExpr::ArithOrLogExpr(data)
                     },
+                    Rule::NegationExpression => {
+                        let mut data = UnaryExpr::new();
+                        for i in p.into_inner() {
+                            match i.as_rule() {
+                                Rule::DecInt => {
+                                    data.rhs = DataValue::Int32(i.as_str().parse::<i32>().unwrap());
+                                },
+                                Rule::Bool => {
+                                    data.rhs = DataValue::Bool(i.as_str().parse::<bool>().unwrap());
+                                }
+                                Rule::Minus => {
+                                    data.op = UnaryOps::Minus;
+                                },
+                                Rule::Not => {
+                                    data.op = UnaryOps::Not;
+                                },
+                                Rule::Identifier => {
+                                    data.rhs = DataValue::Variable(Variable {
+                                        value: i.as_str().to_string(),
+                                        data_type: DataType::None
+                                    });
+                                },
+                                Rule::Annotated => {
+                                    let mut value = "";
+                                    let mut data_type = DataType::None;
+
+                                    for m in i.into_inner() {
+                                        match m.as_rule() {
+                                            Rule::Identifier => {
+                                                value = m.as_str();
+                                                data_type = DataType::Variable;
+                                            },
+                                            Rule::Type => {
+                                                data_type = DataType::from(m.as_str())
+                                            },
+                                            _ => {
+                                                value = m.as_str();
+                                            }
+                                        }
+                                    }
+
+                                    match data_type {
+                                        DataType::Int8 => {
+                                            data.rhs = match value.parse::<i8>() {
+                                                Ok(v) => DataValue::Int8(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::Int8
+                                                })
+                                            };
+                                        },
+                                        DataType::Int16 => {
+                                            data.rhs = match value.parse::<i16>() {
+                                                Ok(v) => DataValue::Int16(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::Int16
+                                                })
+                                            };
+                                        },
+                                        DataType::Int32 => {
+                                            data.rhs = match value.parse::<i32>() {
+                                                Ok(v) => DataValue::Int32(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::Int32
+                                                })
+                                            };
+                                        },
+                                        DataType::Int64 => {
+                                            data.rhs = match value.parse::<i64>() {
+                                                Ok(v) => DataValue::Int64(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::Int64
+                                                })
+                                            };
+                                        },
+                                        DataType::Int128 => {
+                                            data.rhs = match value.parse::<i128>() {
+                                                Ok(v) => DataValue::Int128(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::Int128
+                                                })
+                                            };
+                                        },
+                                        DataType::UInt8 => {
+                                            data.rhs = match value.parse::<u8>() {
+                                                Ok(v) => DataValue::UInt8(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::UInt8
+                                                })
+                                            };
+                                        },
+                                        DataType::UInt16 => {
+                                            data.rhs = match value.parse::<u16>() {
+                                                Ok(v) => DataValue::UInt16(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::UInt16
+                                                })
+                                            };
+                                        },
+                                        DataType::UInt32 => {
+                                            data.rhs = match value.parse::<u32>() {
+                                                Ok(v) => DataValue::UInt32(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::UInt32
+                                                })
+                                            };
+                                        },
+                                        DataType::UInt64 => {
+                                            data.rhs = match value.parse::<u64>() {
+                                                Ok(v) => DataValue::UInt64(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::UInt64
+                                                })
+                                            };
+                                        },
+                                        DataType::UInt128 => {
+                                            data.rhs = match value.parse::<u128>() {
+                                                Ok(v) => DataValue::UInt128(v),
+                                                Err(_) => DataValue::Variable(Variable {
+                                                    value: value.to_string(),
+                                                    data_type: DataType::UInt128
+                                                })
+                                            };
+                                        },
+                                        DataType::Variable => {
+                                            data.rhs = DataValue::Variable(Variable {
+                                                value: value.to_string(),
+                                                data_type: DataType::None
+                                            });
+                                        },
+                                        _ => {}
+                                    }
+                                },
+                                r => {
+                                    panic!("Rule {:?} is not yet implemented!!", r);
+                                }
+                            }
+                        }
+
+                        OpExpr::NegationExpr(data)
+                    }
                     _ => {
                         panic!("Missing Expression without block!");
                     }

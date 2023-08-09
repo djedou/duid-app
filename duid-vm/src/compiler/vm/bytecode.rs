@@ -87,6 +87,111 @@ impl Interpreter {
             ExprWithoutBlck::UnderscoreExpression => {
 
             },
+            ExprWithoutBlck::OpExpr(OpExpr::NegationExpr(op_unary)) => {
+                match op_unary.op {
+                    UnaryOps::Minus => {
+                        match op_unary.rhs {
+                            DataValue::Int8(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 1);
+                            },
+                            DataValue::Int16(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 2);
+                            },
+                            DataValue::Int32(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 4);
+                            },
+                            DataValue::Int64(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 8);
+                            },
+                            DataValue::Int128(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 16);
+                            },
+                            DataValue::UInt8(_) => {
+                                panic!("cannot apply unary operator `-` to type `UInt8`");
+                            },
+                            DataValue::UInt16(_) => {
+                                panic!("cannot apply unary operator `-` to type `UInt16`");
+                            },
+                            DataValue::UInt32(_) => {
+                                panic!("cannot apply unary operator `-` to type `UInt32`");
+                            },
+                            DataValue::UInt64(_) => {
+                                panic!("cannot apply unary operator `-` to type `UInt64`");
+                            },
+                            DataValue::UInt128(_) => {
+                                panic!("cannot apply unary operator `-` to type `UInt128`");
+                            },
+                            DataValue::Float32(eq_float::F32(rhs)) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 4);
+                            },
+                            DataValue::Float64(eq_float::F64(rhs)) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 8);
+                            },
+                            DataValue::Byte(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUMinus, 1);
+                            },
+                            DataValue::Bool(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpUMinus, 1);
+                            },
+                            DataValue::String(_) => {},
+                            DataValue::Chr(_) => {},
+                            DataValue::Variable(_) => {},
+                            DataValue::None => {}
+                        }
+                    },
+                    UnaryOps::Not => {
+                        match op_unary.rhs {
+                            DataValue::Int8(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 1);
+                            },
+                            DataValue::Int16(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 2);
+                            },
+                            DataValue::Int32(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 4);
+                            },
+                            DataValue::Int64(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 8);
+                            },
+                            DataValue::Int128(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 16);
+                            },
+                            DataValue::UInt8(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 1);
+                            },
+                            DataValue::UInt16(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 2);
+                            },
+                            DataValue::UInt32(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 4);
+                            },
+                            DataValue::UInt64(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 8);
+                            },
+                            DataValue::UInt128(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 16);
+                            },
+                            DataValue::Float32(eq_float::F32(rhs)) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_bits().to_be_bytes(), OpCode::OpUNot, 4);
+                            },
+                            DataValue::Float64(eq_float::F64(rhs)) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_bits().to_be_bytes(), OpCode::OpUNot, 8);
+                            },
+                            DataValue::Byte(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, rhs.to_be_bytes(), OpCode::OpUNot, 1);
+                            },
+                            DataValue::Bool(rhs) => {
+                                crate::OpUnaryInstructions!(self, op_unary.rhs, boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpUNot, 1);
+                            },
+                            DataValue::String(_) => {},
+                            DataValue::Chr(_) => {},
+                            DataValue::Variable(_) => {}
+                            DataValue::None => {}
+                        }
+                    },
+                    UnaryOps::None => {}
+                }
+            },
             ExprWithoutBlck::OpExpr(OpExpr::ArithOrLogExpr(op_binary)) => {
                 match op_binary.op {
                     BinaryOps::Arith(arith) => {

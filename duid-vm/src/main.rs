@@ -12,10 +12,10 @@ fn main() {
     }
 
     let byte_code = Engine::from_source(&std::fs::read_to_string(&args[1]).unwrap());
-    //println!("byte_code dump: {:?}", byte_code);
+    println!("byte_code dump: {:?}", byte_code);
     let mut vm = DuidVm::<256>::new();
     vm.load_memory(&byte_code.code);
     vm.load_instructions(&byte_code.instructions);
     vm.run();
-    println!("vm dump: {:?}", vm);
+    //println!("vm dump: {:?}", vm);
 }

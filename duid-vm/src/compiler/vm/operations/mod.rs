@@ -11,6 +11,8 @@ mod op_bit_or;
 mod op_bit_xor;
 mod op_shl;
 mod op_shr;
+mod op_not;
+mod op_uminus;
 /*
 */
 
@@ -27,3 +29,5 @@ pub use op_bit_or::*;
 pub use op_bit_xor::*;
 pub use op_shl::*;
 pub use op_shr::*;
+pub use op_not::*;
+pub use op_uminus::*;

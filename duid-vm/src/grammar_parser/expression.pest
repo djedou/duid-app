@@ -51,8 +51,8 @@ OperatorExpression = {
     BorrowExpression
     | DereferenceExpression
     | ErrorPropagationExpression
-    | NegationExpression
     | ArithmeticOrLogicalExpression
+    | NegationExpression
     | ComparisonExpression
     | LazyBooleanExpression
     | TypeCastExpression

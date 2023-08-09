@@ -28,6 +28,7 @@ macro_rules! OpBinaryInstructions {
     };
 }
 
+
 #[macro_export]
 macro_rules! OpBinary {
     ($stack:expr, $data_type:ty, $size:expr, $op:tt) => {
@@ -58,6 +59,53 @@ macro_rules! OpBinaryFloat {
     };
 }
 
+#[macro_export]
+macro_rules! OpUnaryInstructions {
+    ($stack:expr, $data_type:expr, $rhs:expr, $op:expr, $size:expr) => {
+        let rhs_address = $stack.bytecode.get_size();
+        $stack.bytecode.code.extend_from_slice(&$rhs);
+        let rhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::PUSH, rhs_address, u16::from(&$data_type));
+        $stack.bytecode.instructions.extend_from_slice(&rhs_ints);
+
+        let op_add = $crate::utils::build_instruction_op_datatype($op, u16::from(&$data_type));
+        $stack.bytecode.instructions.extend_from_slice(&op_add);
+
+        let rt_address = $stack.bytecode.get_size();
+        $stack.bytecode.code.extend_from_slice(&[0u8; $size]);
+        let rt_ints = $crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::OpReturn, rt_address, u16::from(&$data_type));
+        $stack.bytecode.instructions.extend_from_slice(&rt_ints);
+
+        // To be remove: Just here for test purpose!
+        let rt_ints = crate::utils::build_instruction_op_add_datatype($crate::compiler::vm::opcode::OpCode::OpOutput, rt_address, u16::from(&$data_type));
+        $stack.bytecode.instructions.extend_from_slice(&rt_ints);
+    };
+}
+
+#[macro_export]
+macro_rules! OpUnary {
+    ($stack:expr, $data_type:ty, $size:expr, $op:tt) => {
+        match &mut $stack.pop($size) {
+            Some(value) => {
+                let rhs = <$data_type>::from_be_bytes(value[..$size].try_into().unwrap());
+                $stack.push(&($op rhs).to_be_bytes());
+            },
+            _ => {}
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! OpUnaryFloat {
+    ($stack:expr, $data_type:ty, $data_type_int:ty, $size:expr, $op:tt) => {
+        match &mut $stack.pop($size) {
+            Some(value) => {
+                let rhs = <$data_type>::from_bits(<$data_type_int>::from_be_bytes(value[..$size].try_into().unwrap()));
+                $stack.push(&($op rhs).to_bits().to_be_bytes());
+            },
+            _ => {}
+        }
+    };
+}
 
 pub fn build_instruction_op_add_datatype(op: OpCode, add: u32, data_type: u16) -> [u16; 4] {
     [make_op(op), (add >> 16) as u16, add as u16, data_type]
