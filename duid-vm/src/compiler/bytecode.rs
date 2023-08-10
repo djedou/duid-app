@@ -91,6 +91,318 @@ impl Interpreter {
             ExprWithoutBlck::UnderscoreExpression => {
 
             },
+            ExprWithoutBlck::OpExpr(OpExpr::ComparisonExpr(op_binary)) => { 
+                match op_binary.op {
+                    BinaryOps::Comp(comp) => {
+                        match comp {
+                            ComparisonExpr::EqEq => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 1);
+                                    },
+                                    (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 2);
+                                    },
+                                    (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 4);
+                                    },
+                                    (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 8);
+                                    },
+                                    (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 16);
+                                    },
+                                    (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 1);
+                                    },
+                                    (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 2);
+                                    },
+                                    (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 4);
+                                    },
+                                    (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 8);
+                                    },
+                                    (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpEqEq, 16);
+                                    },
+                                    (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpEqEq, 4);
+                                    },
+                                    (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpEqEq, 8);
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        //crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpEqEq, 8);
+                                    },
+                                    (DataValue::Bool(_), DataValue::Bool(_)) => {},
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            ComparisonExpr::Ne => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 1);
+                                    },
+                                    (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 2);
+                                    },
+                                    (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 4);
+                                    },
+                                    (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 8);
+                                    },
+                                    (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 16);
+                                    },
+                                    (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 1);
+                                    },
+                                    (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 2);
+                                    },
+                                    (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 4);
+                                    },
+                                    (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 8);
+                                    },
+                                    (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpNe, 16);
+                                    },
+                                    (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpNe, 4);
+                                    },
+                                    (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpNe, 8);
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        //crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpNe, 8);
+                                    },
+                                    (DataValue::Bool(_), DataValue::Bool(_)) => {},
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            ComparisonExpr::Gt => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 1);
+                                    },
+                                    (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 2);
+                                    },
+                                    (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 4);
+                                    },
+                                    (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 8);
+                                    },
+                                    (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 16);
+                                    },
+                                    (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 1);
+                                    },
+                                    (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 2);
+                                    },
+                                    (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 4);
+                                    },
+                                    (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 8);
+                                    },
+                                    (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGt, 16);
+                                    },
+                                    (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpGt, 4);
+                                    },
+                                    (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpGt, 8);
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        //crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpGt, 8);
+                                    },
+                                    (DataValue::Bool(_), DataValue::Bool(_)) => {},
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            ComparisonExpr::Lt => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 1);
+                                    },
+                                    (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 2);
+                                    },
+                                    (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 4);
+                                    },
+                                    (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 8);
+                                    },
+                                    (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 16);
+                                    },
+                                    (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 1);
+                                    },
+                                    (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 2);
+                                    },
+                                    (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 4);
+                                    },
+                                    (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 8);
+                                    },
+                                    (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLt, 16);
+                                    },
+                                    (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpLt, 4);
+                                    },
+                                    (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpLt, 8);
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        //crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpLt, 8);
+                                    },
+                                    (DataValue::Bool(_), DataValue::Bool(_)) => {},
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            ComparisonExpr::Ge => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 1);
+                                    },
+                                    (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 2);
+                                    },
+                                    (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 4);
+                                    },
+                                    (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 8);
+                                    },
+                                    (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 16);
+                                    },
+                                    (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 1);
+                                    },
+                                    (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 2);
+                                    },
+                                    (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 4);
+                                    },
+                                    (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 8);
+                                    },
+                                    (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpGe, 16);
+                                    },
+                                    (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpGe, 4);
+                                    },
+                                    (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpGe, 8);
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        //crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpGe, 8);
+                                    },
+                                    (DataValue::Bool(_), DataValue::Bool(_)) => {},
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            ComparisonExpr::Le => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(lhs), DataValue::Int8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 1);
+                                    },
+                                    (DataValue::Int16(lhs), DataValue::Int16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 2);
+                                    },
+                                    (DataValue::Int32(lhs), DataValue::Int32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 4);
+                                    },
+                                    (DataValue::Int64(lhs), DataValue::Int64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 8);
+                                    },
+                                    (DataValue::Int128(lhs), DataValue::Int128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 16);
+                                    },
+                                    (DataValue::UInt8(lhs), DataValue::UInt8(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 1);
+                                    },
+                                    (DataValue::UInt16(lhs), DataValue::UInt16(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 2);
+                                    },
+                                    (DataValue::UInt32(lhs), DataValue::UInt32(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 4);
+                                    },
+                                    (DataValue::UInt64(lhs), DataValue::UInt64(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 8);
+                                    },
+                                    (DataValue::UInt128(lhs), DataValue::UInt128(rhs)) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_be_bytes(), rhs.to_be_bytes(), OpCode::OpLe, 16);
+                                    },
+                                    (DataValue::Float32(eq_float::F32(lhs)), DataValue::Float32(eq_float::F32(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpLe, 4);
+                                    },
+                                    (DataValue::Float64(eq_float::F64(lhs)), DataValue::Float64(eq_float::F64(rhs))) => {
+                                        crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpLe, 8);
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        //crate::OpCompBinaryInstructions!(self, op_binary.lhs, lhs.to_bits().to_be_bytes(), rhs.to_bits().to_be_bytes(), OpCode::OpLe, 8);
+                                    },
+                                    (DataValue::Bool(_), DataValue::Bool(_)) => {},
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            ComparisonExpr::None => {},
+                        }
+                    }
+                    BinaryOps::Arith(_) => {},
+                    BinaryOps::Log(_) => {},
+                    BinaryOps::None => {}
+                }
+            },
             ExprWithoutBlck::OpExpr(OpExpr::NegationExpr(op_unary)) => {
                 match op_unary.op {
                     UnaryOps::Minus => {
@@ -686,7 +998,8 @@ impl Interpreter {
                             }
                         }
                     },
-                    BinaryOps::None => {}
+                    BinaryOps::None => {},
+                    BinaryOps::Comp(_) => {}
                 }
             },
             ExprWithoutBlck::IndexExpression => {

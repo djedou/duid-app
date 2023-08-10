@@ -137,6 +137,24 @@ impl<const N: usize> DuidVm<N> {
                 [0x018D] => {
                     self.op_not();
                 },
+                [0x019D] => {
+                    self.op_eqeq();
+                },
+                [0x01AD] => {
+                    self.op_ne();
+                },
+                [0x01BD] => {
+                    self.op_gt();
+                },
+                [0x01CD] => {
+                    self.op_lt();
+                },
+                [0x01DD] => {
+                    self.op_ge();
+                },
+                [0x01ED] => {
+                    self.op_le();
+                },
                 [0xFF0B] => {
                     self.op_return();
                 },

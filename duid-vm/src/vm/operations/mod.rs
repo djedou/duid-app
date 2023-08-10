@@ -13,6 +13,12 @@ mod op_shl;
 mod op_shr;
 mod op_not;
 mod op_uminus;
+mod op_eqeq;
+mod op_ne;
+mod op_gt;
+mod op_lt;
+mod op_ge;
+mod op_le;
 /*
 */
 
@@ -31,3 +37,9 @@ pub use op_shl::*;
 pub use op_shr::*;
 pub use op_not::*;
 pub use op_uminus::*;
+pub use op_eqeq::*;
+pub use op_ne::*;
+pub use op_gt::*;
+pub use op_lt::*;
+pub use op_ge::*;
+pub use op_le::*;

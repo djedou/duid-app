@@ -8,9 +8,9 @@ pub enum OpExpr {
     ErrorPropagationExpression,
     NegationExpr(UnaryExpr), // done
     ArithOrLogExpr(BinaryExpr), // done
-    ComparisonExpression, // doing
-    LazyBooleanExpression,
+    ComparisonExpr(BinaryExpr), // done
+    LazyBooleanExpr, // todo!
     TypeCastExpression,
-    AssignmentExpression,
+    AssignmentExpr,
     CompoundAssignmentExpression
 }

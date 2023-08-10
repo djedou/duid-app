@@ -1,5 +1,33 @@
 use crate::vm::data::DataValue;
 
+
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ComparisonExpr {
+    None,
+    EqEq,
+    Ne,
+    Gt,
+    Lt,
+    Ge,
+    Le
+}
+
+impl From<&str> for ComparisonExpr {
+    fn from(value: &str) -> Self {
+        match value {
+            "==" => ComparisonExpr::EqEq,
+            "!=" => ComparisonExpr::Ne,
+            ">" => ComparisonExpr::Gt,
+            "<" => ComparisonExpr::Lt,
+            ">=" => ComparisonExpr::Ge,
+            "<=" => ComparisonExpr::Le,
+            o => panic!("Unknowed operator: {}", o)
+        }
+    }
+}
+
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LogExpr {
     And,
@@ -48,7 +76,8 @@ impl From<&str> for ArithExpr {
 pub enum BinaryOps {
     None,
     Arith(ArithExpr),
-    Log(LogExpr)
+    Log(LogExpr),
+    Comp(ComparisonExpr)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

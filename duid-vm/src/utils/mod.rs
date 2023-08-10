@@ -30,6 +30,34 @@ macro_rules! OpBinaryInstructions {
 
 
 #[macro_export]
+macro_rules! OpCompBinaryInstructions {
+    ($stack:expr, $data_type:expr, $lhs:expr, $rhs:expr, $op:expr, $size:expr) => {
+        let rhs_address = $stack.bytecode.get_size();
+        $stack.bytecode.code.extend_from_slice(&$rhs);
+        let rhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::PUSH, rhs_address, u16::from(&$data_type));
+        $stack.bytecode.instructions.extend_from_slice(&rhs_ints);
+        
+        let lhs_address = $stack.bytecode.get_size();
+        $stack.bytecode.code.extend_from_slice(&$lhs);
+        let lhs_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::PUSH, lhs_address, u16::from(&$data_type));
+        $stack.bytecode.instructions.extend_from_slice(&lhs_ints);
+        
+        let op_add = $crate::utils::build_instruction_op_datatype($op, u16::from(&$data_type));
+        $stack.bytecode.instructions.extend_from_slice(&op_add);
+
+        let rt_address = $stack.bytecode.get_size();
+        $stack.bytecode.code.extend_from_slice(&[0u8; $size]);
+        let rt_ints = $crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::OpReturn, rt_address, u16::from(&$crate::vm::data::DataValue::Bool(false)));
+        $stack.bytecode.instructions.extend_from_slice(&rt_ints);
+
+        // To be remove: Just here for test purpose!
+        let rt_ints = crate::utils::build_instruction_op_add_datatype($crate::vm::opcode::OpCode::OpOutput, rt_address, u16::from(&$crate::vm::data::DataValue::Bool(false)));
+        $stack.bytecode.instructions.extend_from_slice(&rt_ints);
+    };
+}
+
+
+#[macro_export]
 macro_rules! OpBinary {
     ($stack:expr, $data_type:ty, $size:expr, $op:tt) => {
         let index = $size * 2;
@@ -45,6 +73,22 @@ macro_rules! OpBinary {
 }
 
 #[macro_export]
+macro_rules! OpCompBinary {
+    ($stack:expr, $data_type:ty, $size:expr, $op:tt) => {
+        let index = $size * 2;
+        match &mut $stack.pop(index) {
+            Some(value) => {
+                let rhs = <$data_type>::from_be_bytes(value[..$size].try_into().unwrap());
+                let lhs = <$data_type>::from_be_bytes(value[$size..].try_into().unwrap());
+                let res = $crate::utils::boolean_into_bits(&(lhs $op rhs));
+                $stack.push(&res.to_be_bytes());
+            },
+            _ => {}
+        }
+    };
+}
+
+#[macro_export]
 macro_rules! OpBinaryFloat {
     ($stack:expr, $data_type:ty, $data_type_int:ty, $size:expr, $op:tt) => {
         let index = $size * 2;
@@ -53,6 +97,22 @@ macro_rules! OpBinaryFloat {
                 let rhs = <$data_type>::from_bits(<$data_type_int>::from_be_bytes(value[..$size].try_into().unwrap()));
                 let lhs = <$data_type>::from_bits(<$data_type_int>::from_be_bytes(value[$size..].try_into().unwrap()));
                 $stack.push(&(lhs $op rhs).to_bits().to_be_bytes());
+            },
+            _ => {}
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! OpCompBinaryFloat {
+    ($stack:expr, $data_type:ty, $data_type_int:ty, $size:expr, $op:tt) => {
+        let index = $size * 2;
+        match &mut $stack.pop(index) {
+            Some(value) => {
+                let rhs = <$data_type>::from_bits(<$data_type_int>::from_be_bytes(value[..$size].try_into().unwrap()));
+                let lhs = <$data_type>::from_bits(<$data_type_int>::from_be_bytes(value[$size..].try_into().unwrap()));
+                let res = $crate::utils::boolean_into_bits(&(lhs $op rhs));
+                $stack.push(&res.to_be_bytes());
             },
             _ => {}
         }
