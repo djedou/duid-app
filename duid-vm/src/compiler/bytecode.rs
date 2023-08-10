@@ -3,6 +3,7 @@ use crate::{Compile, Ast};
 use crate::ast::*;
 use crate::vm::data::DataValue;
 use crate::utils::{boolean_into_bits};
+use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Bytecode {
@@ -20,6 +21,12 @@ impl Bytecode {
 
     pub fn get_size(&self) -> u32 {
         self.code.len() as u32
+    }
+}
+
+impl fmt::Display for Bytecode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        write!(f, "{:?} {:?}", self.code, self.instructions)
     }
 }
 
