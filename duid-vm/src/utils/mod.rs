@@ -89,6 +89,22 @@ macro_rules! OpCompBinary {
 }
 
 #[macro_export]
+macro_rules! OpLazyBoolBinary {
+    ($stack:expr, $data_type:ty, $size:expr, $op:tt) => {
+        let index = $size * 2;
+        match &mut $stack.pop(index) {
+            Some(value) => {
+                let rhs = $crate::utils::boolean_from_bits(<$data_type>::from_be_bytes(value[..$size].try_into().unwrap()));
+                let lhs = $crate::utils::boolean_from_bits(<$data_type>::from_be_bytes(value[$size..].try_into().unwrap()));
+                let res = $crate::utils::boolean_into_bits(&(lhs $op rhs));
+                $stack.push(&res.to_be_bytes());
+            },
+            _ => {}
+        }
+    };
+}
+
+#[macro_export]
 macro_rules! OpBinaryFloat {
     ($stack:expr, $data_type:ty, $data_type_int:ty, $size:expr, $op:tt) => {
         let index = $size * 2;

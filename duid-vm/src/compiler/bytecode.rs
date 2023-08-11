@@ -91,6 +91,123 @@ impl Interpreter {
             ExprWithoutBlck::UnderscoreExpression => {
 
             },
+            ExprWithoutBlck::OpExpr(OpExpr::LazyBoolExpr(op_binary)) => { 
+                match op_binary.op {
+                    BinaryOps::LazyBool(lazy_bool) => {
+                        match lazy_bool {
+                            LazyBoolExpr::OrOr => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(_), DataValue::Int8(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int8`");
+                                    },
+                                    (DataValue::Int16(_), DataValue::Int16(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int16`");
+                                    },
+                                    (DataValue::Int32(_), DataValue::Int32(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int32`");
+                                    },
+                                    (DataValue::Int64(_), DataValue::Int64(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int64`");
+                                    },
+                                    (DataValue::Int128(_), DataValue::Int128(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int128`");
+                                    },
+                                    (DataValue::UInt8(_), DataValue::UInt8(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt8`");
+                                    },
+                                    (DataValue::UInt16(_), DataValue::UInt16(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt16`");
+                                    },
+                                    (DataValue::UInt32(_), DataValue::UInt32(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt32`");
+                                    },
+                                    (DataValue::UInt64(_), DataValue::UInt64(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt64`");
+                                    },
+                                    (DataValue::UInt128(_), DataValue::UInt128(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt128`");
+                                    },
+                                    (DataValue::Float32(_), DataValue::Float32(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Float32`");
+                                    },
+                                    (DataValue::Float64(_), DataValue::Float64(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Float64`");
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Byte`");
+                                    },
+                                    (DataValue::Bool(lhs), DataValue::Bool(rhs)) => {
+                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpOrOr, 1);
+                                    },
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            LazyBoolExpr::AndAnd => {
+                                match (&op_binary.lhs, op_binary.rhs) {
+                                    (DataValue::Int8(_), DataValue::Int8(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int8`");
+                                    },
+                                    (DataValue::Int16(_), DataValue::Int16(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int16`");
+                                    },
+                                    (DataValue::Int32(_), DataValue::Int32(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int32`");
+                                    },
+                                    (DataValue::Int64(_), DataValue::Int64(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int64`");
+                                    },
+                                    (DataValue::Int128(_), DataValue::Int128(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Int128`");
+                                    },
+                                    (DataValue::UInt8(_), DataValue::UInt8(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt8`");
+                                    },
+                                    (DataValue::UInt16(_), DataValue::UInt16(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt16`");
+                                    },
+                                    (DataValue::UInt32(_), DataValue::UInt32(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt32`");
+                                    },
+                                    (DataValue::UInt64(_), DataValue::UInt64(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt64`");
+                                    },
+                                    (DataValue::UInt128(_), DataValue::UInt128(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `UInt128`");
+                                    },
+                                    (DataValue::Float32(_), DataValue::Float32(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Float32`");
+                                    },
+                                    (DataValue::Float64(_), DataValue::Float64(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Float64`");
+                                    },
+                                    (DataValue::Byte(_), DataValue::Byte(_)) => {
+                                        panic!("cannot apply LazyBool operator `||` to type `Byte`");
+                                    },
+                                    (DataValue::Bool(lhs), DataValue::Bool(rhs)) => {
+                                        crate::OpBinaryInstructions!(self, op_binary.lhs, boolean_into_bits(lhs).to_be_bytes(), boolean_into_bits(&rhs).to_be_bytes(), OpCode::OpAndAnd, 1);
+                                    },
+                                    (DataValue::String(_), DataValue::String(_)) => {},
+                                    (DataValue::Chr(_), DataValue::Chr(_)) => {},
+                                    (DataValue::Variable(_), DataValue::Variable(_)) => {},
+                                    (_, _) => {
+                                        println!("lhs and rhs should have the same Datatype!");
+                                    }
+                                }
+                            },
+                            _ => {}
+                        }
+                    },
+                    BinaryOps::Comp(_) => {},
+                    BinaryOps::Arith(_) => {},
+                    BinaryOps::Log(_) => {},
+                    BinaryOps::None => {}
+                }
+            },
             ExprWithoutBlck::OpExpr(OpExpr::ComparisonExpr(op_binary)) => { 
                 match op_binary.op {
                     BinaryOps::Comp(comp) => {
@@ -397,7 +514,8 @@ impl Interpreter {
                             },
                             ComparisonExpr::None => {},
                         }
-                    }
+                    },
+                    BinaryOps::LazyBool(_) => {},
                     BinaryOps::Arith(_) => {},
                     BinaryOps::Log(_) => {},
                     BinaryOps::None => {}
@@ -998,6 +1116,7 @@ impl Interpreter {
                             }
                         }
                     },
+                    BinaryOps::LazyBool(_) => {},
                     BinaryOps::None => {},
                     BinaryOps::Comp(_) => {}
                 }

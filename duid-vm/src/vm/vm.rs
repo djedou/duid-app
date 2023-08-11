@@ -155,6 +155,12 @@ impl<const N: usize> DuidVm<N> {
                 [0x01ED] => {
                     self.op_le();
                 },
+                [0x01FD] => {
+                    self.op_oror();
+                },
+                [0x020D] => {
+                    self.op_andand();
+                },
                 [0xFF0B] => {
                     self.op_return();
                 },

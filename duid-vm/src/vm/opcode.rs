@@ -82,6 +82,8 @@ pub enum OpCode {
     OpLt,
     OpGe,
     OpLe,
+    OpOrOr,
+    OpAndAnd,
     //### Others ###
     OpReturn,
     OpOutput
@@ -123,6 +125,8 @@ pub fn make_op(op: OpCode) -> u16 {
         OpCode::OpLt => 0x01CD,
         OpCode::OpGe  => 0x01DD,
         OpCode::OpLe => 0x01ED,
+        OpCode::OpOrOr => 0x01FD,
+        OpCode::OpAndAnd => 0x020D,
         // System
         OpCode::OpReturn => 0xFF0B,
         OpCode::OpOutput => 0xFF1B,

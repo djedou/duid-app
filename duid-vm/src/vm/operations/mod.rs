@@ -19,6 +19,8 @@ mod op_gt;
 mod op_lt;
 mod op_ge;
 mod op_le;
+mod op_oror;
+mod op_andand;
 /*
 */
 
@@ -43,3 +45,5 @@ pub use op_gt::*;
 pub use op_lt::*;
 pub use op_ge::*;
 pub use op_le::*;
+pub use op_oror::*;
+pub use op_andand::*;

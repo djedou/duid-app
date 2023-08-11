@@ -237,6 +237,9 @@ fn build_operator_expression(pair: pest::iterators::Pair<Rule>) -> ExprWithoutBl
                     Rule::ComparisonExpression => {
                         OpExpr::ComparisonExpr(build_ast_binary(p.clone()))
                     },
+                    Rule::LazyBooleanExpression => {
+                        OpExpr::LazyBoolExpr(build_ast_binary(p.clone()))
+                    },
                     _ => {
                         panic!("Missing Expression without block!");
                     }
@@ -324,6 +327,12 @@ fn build_ast_binary(pair: pest::iterators::Pair<Rule>) -> BinaryExpr {
             },
             Rule::Le => {
                 data.op = BinaryOps::Comp(ComparisonExpr::Le);
+            },
+            Rule::OrOr => {
+                data.op = BinaryOps::LazyBool(LazyBoolExpr::OrOr);
+            },
+            Rule::AndAnd => {
+                data.op = BinaryOps::LazyBool(LazyBoolExpr::AndAnd);
             },
             Rule::Identifier => {
                 if data.lhs == DataValue::None {

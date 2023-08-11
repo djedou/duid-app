@@ -2,6 +2,15 @@ use crate::vm::data::DataValue;
 
 
 
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum LazyBoolExpr {
+    None,
+    OrOr,
+    AndAnd
+}
+
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ComparisonExpr {
     None,
@@ -77,7 +86,8 @@ pub enum BinaryOps {
     None,
     Arith(ArithExpr),
     Log(LogExpr),
-    Comp(ComparisonExpr)
+    Comp(ComparisonExpr),
+    LazyBool(LazyBoolExpr)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

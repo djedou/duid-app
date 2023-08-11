@@ -9,7 +9,7 @@ pub enum OpExpr {
     NegationExpr(UnaryExpr), // done
     ArithOrLogExpr(BinaryExpr), // done
     ComparisonExpr(BinaryExpr), // done
-    LazyBooleanExpr, // todo!
+    LazyBoolExpr(BinaryExpr), // done
     TypeCastExpression,
     AssignmentExpr,
     CompoundAssignmentExpression
