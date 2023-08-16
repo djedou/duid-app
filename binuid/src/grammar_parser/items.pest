@@ -1,0 +1,82 @@
+
+ItemVis = @{ Visibility ~ WHITESPACE }
+ModuleItemExported = { PathSep ~ CurlyBracesOpen ~ WHITESPACE? ~ (SimplePath  ~ WHITESPACE? ~ Comma? ~ WHITESPACE?)* ~ CurlyBracesClose }
+ModulePath = @{ KW_MOD ~ WHITESPACE ~ SimplePath }
+
+
+UseTree = @{
+    (SimplePath? ~ PathSep)? ~ Star
+   | (SimplePath? ~ PathSep)? ~ CurlyBracesOpen ~ WHITESPACE? ~ (SimplePath ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ SimplePath)* ~ WHITESPACE? ~ Comma?)? ~ WHITESPACE? ~ CurlyBracesClose
+   | SimplePath ~ WHITESPACE ~ (KW_AS ~ WHITESPACE ~ (Identifier | Underscore))?
+}
+
+UseDeclaration = @{ KW_USE ~ WHITESPACE ~ UseTree ~ Semi}
+
+FunctionParameters = {
+    SelfParam ~ WHITESPACE? ~ Comma?
+    | (SelfParam ~ WHITESPACE? ~ Comma)? ~ WHITESPACE? ~ FunctionParam ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ FunctionParam)* ~ WHITESPACE? ~ Comma?
+}
+SelfParam = { ShorthandSelf | TypedSelf }
+ShorthandSelf = { And? ~ KW_MUT? ~ WHITESPACE ~ KW_SELFVALUE }
+
+TypedSelf = { KW_MUT? ~ WHITESPACE ~ KW_SELFVALUE ~ WHITESPACE? ~ Colon ~ WHITESPACE? ~ DataType  }
+
+FunctionParamType = { Colon ~ WHITESPACE? ~ (DataType | Expression) }
+FunctionParamVar = { Identifier ~ WHITESPACE? }
+FunctionParam = { DotDotDot | (FunctionParamVar ~ FunctionParamType) }
+
+FunctionReturnType = { RArrow ~ WHITESPACE? ~ DataType }
+FunctionArgs = { ParenthesesOpen ~ WHITESPACE? ~ FunctionParameters? ~ WHITESPACE? ~ ParenthesesClose }
+Function = { KW_FN ~ WHITESPACE? ~ Identifier ~ FunctionArgs ~ WHITESPACE? ~ FunctionReturnType? ~ WHITESPACE? ~ BlockExpression }
+
+UnitStruct = {
+    KW_STRUCT ~ WHITESPACE? ~ DataType ~ WHITESPACE? ~ Semi
+}
+
+StructStructBlock = { CurlyBracesOpen ~ WHITESPACE? ~ StructFields? ~ WHITESPACE? ~ CurlyBracesClose }
+StructStruct = { KW_STRUCT ~ WHITESPACE? ~ DataType ~ GenericParams? ~ WHITESPACE? ~ StructStructBlock }
+
+TupleStructBlock = { ParenthesesOpen ~ WHITESPACE? ~ TupleFields? ~ WHITESPACE? ~ ParenthesesClose }
+TupleStruct  = { KW_STRUCT ~ WHITESPACE? ~ DataType ~ GenericParams? ~ TupleStructBlock ~ Semi }
+StructFields = {
+    StructField ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ StructField)* ~ WHITESPACE? ~ Comma?
+}
+StructVis = @{ Visibility ~ WHITESPACE }
+StructField  = { StructVis? ~ Identifier ~ WHITESPACE? ~ Colon ~ WHITESPACE? ~ DataType}
+TupleFields = { TupleField ~ (Comma ~ WHITESPACE? ~ TupleField)* ~ WHITESPACE? ~ Comma? }
+TupleField  = { StructVis? ~ DataType ~ WHITESPACE? }
+
+Struct = _{
+    StructStruct
+    | TupleStruct
+    | UnitStruct
+}
+
+EnumItems = { EnumItem ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ EnumItem)* ~ WHITESPACE? ~ Comma? }
+EnumItem = { Identifier ~ WHITESPACE? ~ (EnumItemTuple | EnumItemStruct)? ~ WHITESPACE? ~ EnumItemDiscriminant? }
+EnumItemTuple = { ParenthesesOpen ~ WHITESPACE? ~ TupleFields? ~ WHITESPACE? ~ ParenthesesClose }
+EnumItemStruct = { CurlyBracesOpen ~ WHITESPACE? ~ StructFields? ~ WHITESPACE? ~ CurlyBracesClose }
+EnumItemDiscriminant = { Eq ~ WHITESPACE? ~ Expression }
+EnumerationBlock = { CurlyBracesOpen ~ WHITESPACE? ~ EnumItems? ~ WHITESPACE? ~ CurlyBracesClose }
+Enumeration = { KW_ENUM ~ WHITESPACE? ~ DataType ~ GenericParams? ~ WHITESPACE? ~ EnumerationBlock }
+
+ConstantItem = { KW_CONST ~ WHITESPACE? ~ (Identifier | Underscore) ~ WHITESPACE? ~ Colon ~ WHITESPACE? ~ DataType ~ WHITESPACE? ~ (Eq ~ WHITESPACE? ~ Expression)? ~ WHITESPACE? ~ Semi }
+StaticItem = { KW_STATIC ~ WHITESPACE? ~ KW_MUT? ~ WHITESPACE ~ Identifier ~ WHITESPACE? ~ Colon ~ WHITESPACE ~ DataType ~ WHITESPACE ~ (Eq ~ WHITESPACE? ~ Expression)? ~ WHITESPACE ~ Semi}
+
+AssociatedItemVis = @{ Visibility ~ WHITESPACE }
+AssociatedItem = { AssociatedItemVis? ~ WHITESPACE? ~ Function }
+ImplementationBlock = { CurlyBracesOpen ~ WHITESPACE? ~ AssociatedItem* ~ WHITESPACE? ~ CurlyBracesClose }
+Implementation = { KW_IMPL ~ WHITESPACE? ~ DataType ~ WHITESPACE? ~ ImplementationBlock }
+
+Item = {
+    ItemVis? ~ (
+        UseDeclaration
+        | Struct
+        | Enumeration
+        | Implementation
+        | Function
+        | ConstantItem
+        | StaticItem
+    )
+}
+

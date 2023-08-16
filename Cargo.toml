@@ -7,13 +7,15 @@ resolver = "2"
 [dependencies]
 duid-core = {version = "0.1.0", path = "./duid-core"}
 duid-vm = {version = "0.1.0", path = "./duid-vm"}
+binuid = {version = "0.1.0", path = "./binuid"}
 
 [workspace]
 members = [
     "duid-core",
     "duid-data-grid",
     "duid-ui",
-    "duid-vm"
+    "duid-vm",
+    "binuid"
 ]
 
 exclude = [

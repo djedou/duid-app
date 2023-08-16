@@ -1,0 +1,16 @@
+
+Visibility = @{
+    KW_PUB
+    | (KW_PUB ~ ParenthesesOpen ~ KW_CRATE ~ ParenthesesClose)
+    | (KW_PUB ~ ParenthesesOpen ~ KW_SELFVALUE ~ ParenthesesClose)
+    | (KW_PUB ~ ParenthesesOpen ~ KW_SUPER ~ ParenthesesClose)
+    | (KW_PUB ~ ParenthesesOpen ~ KW_IN ~ SimplePath ~ ParenthesesClose)
+}
+
+SimplePath = _{
+    PathSep? ~ SimplePathSegment ~ (PathSep ~ SimplePathSegment)*
+}
+
+SimplePathSegment = {
+    Identifier | KW_SUPER | KW_SELFVALUE | KW_CRATE | (Dollar ~ KW_CRATE)
+}

@@ -1,0 +1,125 @@
+
+/// #### String Literals #######
+UnicodeHex = { HexDigit{1, 6} }
+Predefined = { "n" | "r" | "t" | "\\" | "0" | "\"" | "'" }
+Unicode = { "u" ~ "{" ~ UnicodeHex ~ "}" }
+Escape = { "\\" ~ (Predefined | ByteValue | Unicode) }
+StringContent = {(!("\\" | "\"") ~ ANY)+ }
+RawStringInterior = {(!("\"" ~ PEEK) ~ ANY )*}
+DoubleQuotedString = @{ "\"" ~ (StringContent | Escape)* ~ "\"" }
+RAW_STRING_LITERAL = @{ "r" ~ PUSH("#"+) ~ "\"" ~ RawStringInterior ~ "\"" ~ POP }
+BackquotedQuotedString  = @{ "`" ~ (!("`") ~ ANY)* ~ "`"}
+
+StringValue  = @{
+    RAW_STRING_LITERAL |
+    BackquotedQuotedString |
+    DoubleQuotedString 
+}
+
+// DataValue
+ByteValue = @{ "x" ~ HexDigit{2} }
+True  = { "true" | "True" }
+False = { "false" | "False" }
+BoolValue = { True | False }
+CharValue = { "'" ~ (Escape | ANY) ~ "'" }
+
+/// #### Digit Literals #######
+Digit = { '0'..'9' }
+HexDigit = { '0'..'9' | 'A'..'F' | 'a'..'f' }
+OctDigit = { '0'..'7' }
+BinDigit = { '0'..'1' }
+
+/// #### Number Literals #######
+BinInt = @{ "0" ~ ("b" | "B") ~ ("_"? ~ BinDigit)+ }
+OctInt = @{ "0" ~ ("o" | "O") ~ ("_"? ~ OctDigit)+ }
+HexInt = @{ "0" ~ ("x" | "X") ~ ("_"? ~ HexDigit)+ }
+DecInt =  @{ Digit ~ (Digit | "_")* }
+
+IntValue = _{ BinInt | OctInt | HexInt | DecInt } // i32
+Exp = { (^"e" | ^"E" ) ~ ("+" | "-")? ~ IntValue }
+FloatValue = @{ // default to f64
+    "-"? ~ IntValue ~ "." ~ IntValue? ~ Exp? |
+    "-"? ~ IntValue ~ Exp
+}
+
+Variable = @{ Identifier }
+
+DataValue = _{
+    ByteValue
+    | BoolValue
+    | FloatValue 
+    | IntValue 
+    | Variable
+    | StringValue
+    | CharValue
+}
+
+// DataType
+ByteType = { "byte" }
+BoolType = { "bool" }
+CharType = { "char" }
+F32Type = { "f32" }
+F64Type = { "f64" }
+I8Type = { "i8" }
+I16Type = { "i16" }
+I32Type = { "i32" }
+I64Type = { "i64" }
+I128Type = { "i128" }
+U8Type = { "u8" }
+U16Type = { "u16" }
+U32Type = { "u32" }
+U64Type = { "u64" }
+U128Type = { "u128" }
+RefType = { "&" ~ DataType }
+StringType = { "str" }
+UnitType = { "unit" }
+
+PrimitiveType = _{
+    ByteType
+    | BoolType
+    | CharType
+    | F32Type
+    | F64Type
+    | FnType 
+    | I8Type
+    | I16Type
+    | I32Type
+    | I64Type
+    | I128Type
+    | U8Type
+    | U16Type
+    | U32Type
+    | U64Type
+    | U128Type
+    | RefType
+    | StringType
+    | UnitType
+    | TupleType
+    | ArrayType
+    | VecType
+}
+
+
+CustomerTypeIdent = @{ AlphaUp ~ Identifier? }
+CustomerType = _{ CustomerTypeIdent ~ GenericParams? }
+DataType = _{ PrimitiveType | CustomerType }
+Data = { DataValue ~ (WHITESPACE? ~ Colon ~ WHITESPACE? ~ DataType)? }
+
+// Helpers
+TupleType = { ParenthesesOpen ~ WHITESPACE? ~ TupleFieldsType? ~ WHITESPACE? ~ ParenthesesClose }
+TupleFieldsType = { TupleFieldType ~ (Comma ~ WHITESPACE? ~ TupleFieldType)* ~ WHITESPACE? ~ Comma? }
+TupleFieldType  = _{ DataType ~ WHITESPACE? }
+
+ArrayType = { SquareBracketsOpen ~ WHITESPACE? ~ ArrayTypeElements? ~ WHITESPACE? ~ SquareBracketsClose }
+ArrayTypeElements = _{ DataType ~ WHITESPACE? ~ Semi ~ WHITESPACE? ~ DecInt }
+
+FnParamType = { DataType ~ WHITESPACE? ~ (Comma ~ WHITESPACE? ~ DataType)* ~ WHITESPACE? ~ Comma? }
+FnReturnType = { RArrow ~ WHITESPACE? ~ DataType }
+FnArgs = { ParenthesesOpen ~ WHITESPACE? ~ FnParamType? ~ WHITESPACE? ~ ParenthesesClose }
+FnType = { "Fn" ~ FnArgs ~ WHITESPACE? ~ FnReturnType? }
+
+GenericParam = { CustomerTypeIdent ~ (WHITESPACE? ~ Colon ~ WHITESPACE? ~ DataType)? ~ WHITESPACE? ~ Comma? }
+GenericParams = { "<" ~ GenericParam* ~ ">" }
+
+VecType = { "Vec<" ~ DataType ~ ">" }
+

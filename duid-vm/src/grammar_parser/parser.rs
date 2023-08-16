@@ -638,7 +638,7 @@ fn build_ast_binary(pair: pest::iterators::Pair<Rule>) -> BinaryExpr {
                 }
             },
             r => {
-                panic!("Rule {:?} is not yet implemented!!", r);
+                println!("Rule {:?} is not yet implemented!!", r);
             }
         }
     }

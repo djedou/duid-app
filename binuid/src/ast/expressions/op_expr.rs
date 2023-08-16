@@ -5,11 +5,8 @@ use crate::ast::{UnaryExpr, BinaryExpr};
 pub enum OpExpr {
     BorrowExpression,
     DereferenceExpression,
-    ErrorPropagationExpression,
-    NegationExpr(UnaryExpr), // to be reviews
-    ArithOrLogExpr(BinaryExpr), // done
-    ComparisonExpr(BinaryExpr), // done
-    LazyBoolExpr(BinaryExpr), // done
+    UnaryExpr(UnaryExpr), // doing
+    BinaryExpr(BinaryExpr), // doing
     TypeCastExpression,
     AssignmentExpr,
     CompoundAssignmentExpression

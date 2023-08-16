@@ -1,0 +1,8 @@
+
+// EntryPoint
+ModuleHeader = { ItemVis? ~ (ModulePath ~ ModuleItemExported? ~ WHITESPACE? ~ Semi) }
+ModuleContent = { (Item | Expression | Comment)* }
+Module = { ModuleHeader ~ WHITESPACE? ~ ModuleContent }
+
+NoModuleStatements = _{ Item | Expression | Comment }
+ModuleFile = _{ SOI ~ (Module | NoModuleStatements*) ~ EOI }

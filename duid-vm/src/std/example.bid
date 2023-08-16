@@ -1,8 +1,7 @@
 
-/*
+-24;
 
 25:Int8 - 30:Int8
--24;
 !false;
 120.:Float64 - 50.9:Float64;
 
@@ -24,13 +23,12 @@ true | false;
 25 > 25
 25 != 25
 24.9 < 24.8
-24.9:Float64 > 24.8:Float64*/
+24.9:Float64 > 24.8:Float64
 true || false;
-25 || 26;
-/*false || true;
+false || true;
 false || false;
 true || true;
 true && false;
 false && true;
 false && false;
-true && true;*/
+true && true;
